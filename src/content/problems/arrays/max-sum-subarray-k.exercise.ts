@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['sliding-window', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 429,
   mode: 'function_implementation',
   
   learningGoals: ['Understand the sliding window technique', 'Optimize sum recalculations'],

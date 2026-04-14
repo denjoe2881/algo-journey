@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'hard',
   tags: ['two-pointers', 'cycle-detection', 'cse201'],
   estimatedMinutes: 25,
-  order: 99,
+  order: 427,
   mode: 'function_implementation',
   
   learningGoals: ["Understand Floyd's cycle-finding algorithm", 'Detect cycle length dynamically'],

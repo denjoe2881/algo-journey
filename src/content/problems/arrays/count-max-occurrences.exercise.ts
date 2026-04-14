@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'counting', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 411,
   mode: 'function_implementation',
   
   learningGoals: ['Combine multiple logical passes over an array'],

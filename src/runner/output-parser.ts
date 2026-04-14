@@ -82,5 +82,12 @@ export function parseRunnerOutput(
     };
   });
 
+  // Append any dynamically generated tests (like stress-0 from javaGenerator)
+  for (const [name, parsed] of resultMap.entries()) {
+    if (!allTests.some(tc => tc.name === name)) {
+      tests.push(parsed);
+    }
+  }
+
   return { tests, runtimeError, done };
 }

@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['counting', 'map', 'cse201'],
   estimatedMinutes: 15,
-  order: 99,
+  order: 413,
   mode: 'function_implementation',
   
   learningGoals: ['Use a map to count frequencies', 'Handle tie breakers'],
@@ -46,14 +46,15 @@ export default defineExercise({
             java.util.HashMap<Integer, Integer> freq = new java.util.HashMap<>();
             for (int x : arr) freq.put(x, freq.getOrDefault(x, 0) + 1);
             int bestVal = arr[0], bestCnt = 0;
-            for (java.util.Map.Entry<Integer,Integer> e2 : freq.entrySet()) {
-                if (e2.getValue() > bestCnt || (e2.getValue() == bestCnt && e2.getKey() < bestVal)) {
-                    bestCnt = e2.getValue(); bestVal = e2.getKey();
+            for (Integer x2 : freq.keySet()) {
+                int c2 = freq.get(x2);
+                if (c2 > bestCnt || (c2 == bestCnt && x2 < bestVal)) {
+                    bestCnt = c2; bestVal = x2;
                 }
             }
             int expected = bestVal;
             try {
-                int actual = s.mostFrequentValue(arr);
+                int actual = s.mostFrequentValue(arr.clone());
                 System.out.println("AJ|stress-" + i + "|" + (actual == expected) + "|" + actual + "|" + expected);
             } catch (Exception e) { System.out.println("AJ_ERROR|stress-" + i + ": " + e); }
         }`,

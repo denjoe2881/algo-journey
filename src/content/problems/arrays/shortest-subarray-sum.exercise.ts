@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'hard',
   tags: ['sliding-window', 'two-pointers', 'cse201'],
   estimatedMinutes: 25,
-  order: 99,
+  order: 430,
   mode: 'function_implementation',
   
   learningGoals: ['Apply sliding window techniques to variable-length subarrays'],

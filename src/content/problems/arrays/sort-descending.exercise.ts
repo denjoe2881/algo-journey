@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['sorting', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 416,
   mode: 'function_implementation',
   
   learningGoals: ['Understand comparison-based sorting', 'Sort an array in descending order'],

@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 419,
   mode: 'function_implementation',
   
   learningGoals: ['Check adjacent elements', 'Early exit when condition fails'],

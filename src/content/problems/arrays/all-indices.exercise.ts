@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 418,
   mode: 'function_implementation',
   
   learningGoals: ['Accumulate results into a collection'],

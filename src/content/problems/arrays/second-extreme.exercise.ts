@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['sorting', 'finding', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 417,
   mode: 'function_implementation',
   
   learningGoals: ['Filter unique distinct values', 'Find second extreme bounds'],

@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['accumulator', 'math', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 409,
   mode: 'function_implementation',
   
   learningGoals: ['Accumulate sum and divide by count'],

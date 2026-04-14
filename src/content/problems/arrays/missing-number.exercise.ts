@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['math', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 425,
   mode: 'function_implementation',
   
   learningGoals: ['Understand arithmetic sum', 'Deduce missing elements optimally'],

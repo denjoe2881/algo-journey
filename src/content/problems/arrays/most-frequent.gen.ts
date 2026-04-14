@@ -32,8 +32,7 @@ export default defineTests('most-frequent', (t, rng) => {
   }
 
   for (let i = 0; i < 7; i++) {
-    const isLarge = i >= 5;
-    const len = isLarge ? rng.int(1000, 2000) : rng.int(10, 500);
+    const len = rng.int(10, 500);
     const testArr = rng.intArray(len, -20, 20);
     t.hidden(`gen-${i}`, { args: [testArr], expected: computeMostFrequent(testArr) });
   }

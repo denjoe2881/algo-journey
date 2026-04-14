@@ -134,9 +134,10 @@ export function getAllCatalogEntries(): CatalogEntry[] {
   }
 
   return entries.sort((a, b) => {
-    const topicCmp = a.topic.localeCompare(b.topic);
-    if (topicCmp !== 0) return topicCmp;
-    return (a.order ?? 999) - (b.order ?? 999);
+    const orderA = a.order ?? 10000;
+    const orderB = b.order ?? 10000;
+    if (orderA !== orderB) return orderA - orderB;
+    return a.title.localeCompare(b.title);
   });
 }
 

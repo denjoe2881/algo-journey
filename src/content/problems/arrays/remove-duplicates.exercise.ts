@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['deduplication', 'cse201'],
   estimatedMinutes: 15,
-  order: 99,
+  order: 420,
   mode: 'function_implementation',
   
   learningGoals: ['Filter out elements that have been seen already linearly'],

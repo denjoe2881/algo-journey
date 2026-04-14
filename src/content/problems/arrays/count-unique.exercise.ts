@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['counting', 'set', 'cse201'],
   estimatedMinutes: 15,
-  order: 99,
+  order: 412,
   mode: 'function_implementation',
   
   learningGoals: ['Use a collection to track seen elements', 'Deduplicate values'],

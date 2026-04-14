@@ -1,0 +1,48 @@
+ID,Title,Order,Tags
+is-even,Is Even,101,modulo
+fizz-buzz,FizzBuzz,1000,conditionals;modulo
+power-of-two,Power of Two,201,bit-manipulation
+factorial,Factorial,202,math
+is-palindrome,Is Palindrome,203,two-pointers;string-comparison
+two-sum-basic,Two Sum Basic,1000,array-traversal;hash-map
+sum-digits,Sum of Digits,204,math;modulo
+gcd,Greatest Common Divisor,1000,euclidean
+fibonacci,Fibonacci Number,1000,dynamic-programming
+selection-sort,Selection Sort,1000,in-place;cse201
+reverse-string,Reverse String,205,string-builder
+is-prime,Is Prime,1000,loop;optimization
+count-vowels,Count Vowels,206,string-traversal
+contains-duplicate,Contains Duplicate,1000,hash-set
+first-index-of,First Index Of,401,linear-search;cse201
+last-index-of,Last Index Of,402,linear-search;cse201
+contains-value,Contains Value,403,linear-search;cse201
+max-element,Maximum Element,404,linear-search;extreme;cse201
+find-min,Find Minimum Value,405,linear-search;extreme;cse201
+index-of-max,Index of Maximum,406,linear-search;extreme;cse201
+index-of-min,Index of Minimum,407,linear-search;extreme;cse201
+sum-array,Sum of Array,408,accumulator;cse201
+average,Calculate Average,409,accumulator;math;cse201
+count-occurrences,Count Occurrences,410,linear-search;counting;cse201
+count-max-occurrences,Count Max Occurrences,411,linear-search;counting;cse201
+count-unique,Count Unique Values,412,counting;set;cse201
+most-frequent,Most Frequent Value,413,counting;map;cse201
+reverse-array,Reverse Array,414,two-pointers;in-place;cse201
+bubble-sort,Bubble Sort,415,in-place;cse201
+sort-descending,Sort Descending,416,sorting;cse201
+second-extreme,Second Extreme Value,417,sorting;finding;cse201
+all-indices,All Indices of Value,418,linear-search;cse201
+is-sorted,Check Array Is Sorted,419,linear-search;cse201
+remove-duplicates,Remove Duplicates,420,deduplication;cse201
+pairs-with-sum,Pairs with Given Sum,421,two-pointers;hashing;cse201
+rotate,Rotate Array,422,array-manipulation;cse201
+longest-run,Longest Consecutive Run,423,linear-search;counting;cse201
+merge-sorted-arrays,Merge Sorted Arrays,424,two-pointers;merge;cse201
+missing-number,Missing Number,425,math;cse201
+two-sum-sorted,Two Sum (Sorted),426,two-pointers;cse201
+find-cycle-length,Detect Cycle Length,427,two-pointers;cycle-detection;cse201
+intersect-sorted,Intersection of Two Sorted Arrays,428,two-pointers;cse201
+max-sum-subarray-k,Maximum Sum of Subarray of Size K,429,sliding-window;cse201
+shortest-subarray-sum,Shortest Subarray With Sum ≥ Target,430,sliding-window;two-pointers;cse201
+build-prefix-sum,Build Prefix Sum,431,prefix-sum;cse201
+range-sum-queries,Range Sum Queries,432,prefix-sum;cse201
+binary-search,Binary Search,433,divide-and-conquer;cse201

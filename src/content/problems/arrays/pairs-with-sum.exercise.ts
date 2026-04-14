@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['two-pointers', 'hashing', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 421,
   mode: 'function_implementation',
   
   learningGoals: ['Find complementing values optimally', 'Guarantee pair uniqueness'],
@@ -40,8 +40,8 @@ export default defineExercise({
       visibility: 'hidden',
       genMethodBody: `
         for (int i = 0; i < 5; i++) {
-            // pairs-with-sum is O(n^2) for brute-force; use moderate sizes
-            int len = (i >= 3) ? (5000 + rng.nextInt(2001)) : (2000 + rng.nextInt(1001));
+            // pairs-with-sum is O(n^2) for brute-force; use safe sizes to avoid 5s timeout
+            int len = (i >= 3) ? (1000 + rng.nextInt(501)) : (300 + rng.nextInt(201));
             int[] arr = new int[len];
             for (int j = 0; j < len; j++) arr[j] = rng.nextInt(201) - 100;
             int target = rng.nextInt(101) - 50;

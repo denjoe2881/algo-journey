@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 403,
   mode: 'function_implementation',
   
   learningGoals: ['Linear Array Traversal', 'Early exit when condition met'],

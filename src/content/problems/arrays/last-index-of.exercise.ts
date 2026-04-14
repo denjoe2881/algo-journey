@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'cse201'],
   estimatedMinutes: 10,
-  order: 99,
+  order: 402,
   mode: 'function_implementation',
   
   learningGoals: ['Iterate array backwards', 'Return early when found'],

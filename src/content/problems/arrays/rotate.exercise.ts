@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['array-manipulation', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 422,
   mode: 'function_implementation',
   
   learningGoals: ['Understand modulo arithmetic for array bounds', 'Copy slices of an array'],

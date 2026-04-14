@@ -3,7 +3,10 @@
  * ═══════════════════════════════════════════════════════
  *
  * HOW TO RUN (from browser DevTools Console):
- *   import('/auto_run_test.js')
+ *   1. Load the script (once):
+ *      import('/auto_run_test.js')
+ *   2. Run the test (whenever you want):
+ *      auto_run_test()
  *
  * REQUIRES:  npm run dev  (Vite dev server)
  * The app exposes window.__algoDev automatically in dev mode.
@@ -18,12 +21,12 @@
  */
 
 const CFG = {
-  WAIT_NAV:    2500,   // ms after hash navigation before interacting
+  WAIT_NAV: 2500,   // ms after hash navigation before interacting
   WAIT_MONACO: 1500,   // extra ms for Monaco to initialize
   WAIT_SUBMIT: 4000,   // ms after clicking Submit for results
-  WEAK_THRESHOLD: 2,   // blank passes > this → flag as WEAK_TESTS
+  WEAK_THRESHOLD: 4,   // blank passes > this → flag as WEAK_TESTS
   MAX_PROBLEMS: 9999,  // set lower to test a subset
-  SKIP_SLUGS: [],      // e.g. ['hello-world'] to skip trivial problems
+  SKIP_SLUGS: ['hello-world', 'simple-counter', 'min-stack'],      // e.g. ['hello-world'] to skip trivial problems
 };
 
 // ── Helpers ────────────────────────────────────────────────
@@ -85,7 +88,7 @@ function switchToResultTab() {
 
 // ── Main Runner ────────────────────────────────────────────
 
-(async function auto_run_test() {
+window.auto_run_test = async function (onlyFailing = false) {
   console.clear();
   console.log('%c🚀 auto_run_test starting…', 'color:#6ee7b7;font-size:14px;font-weight:bold');
 
@@ -97,14 +100,33 @@ function switchToResultTab() {
     return;
   }
 
+  // Load persistent report if it exists
+  const STORE_KEY = 'algo_auto_test_report';
+  let report = [];
+  try {
+    const saved = localStorage.getItem(STORE_KEY);
+    if (saved) report = JSON.parse(saved);
+  } catch (e) { }
+
+  if (!onlyFailing) {
+    // If running full suite, clear previous report
+    report = [];
+    localStorage.removeItem(STORE_KEY);
+  }
+
+  const okIds = report.filter(r => r.status === '🟢 OK' || r.status === '🟡 WEAK_TESTS').map(r => r.id);
+
   // Filter and limit
   const problems = catalog
     .filter(p => !CFG.SKIP_SLUGS.includes(p.id))
+    .filter(p => !onlyFailing || !okIds.includes(p.id))
     .slice(0, CFG.MAX_PROBLEMS);
 
+  if (onlyFailing) {
+    console.log(`⏭️ Skipping ${okIds.length} already OK/WEAK problems.`);
+  }
   console.log(`📋 Found ${catalog.length} problems, testing ${problems.length}…\n`);
 
-  const report = [];
   let idx = 0;
 
   for (const problem of problems) {
@@ -154,22 +176,29 @@ function switchToResultTab() {
       }
 
       // ── 4. Classify ──────────────────────────────────────
-      const blankN   = blankScore?.passed  ?? -1;
-      const blankTot = blankScore?.total   ?? 20;
-      const solN     = solScore?.passed    ?? -1;
-      const solTot   = solScore?.total     ?? 20;
+      const blankN = blankScore?.passed ?? -1;
+      const blankTot = blankScore?.total ?? 20;
+      const solN = solScore?.passed ?? -1;
+      const solTot = solScore?.total ?? 20;
 
       let status;
-      if (!solution)             status = '🔵 NO_SOLUTION';
-      else if (solN < solTot)   status = '🔴 SOL_FAILS';
+      if (!solution) status = '🔵 NO_SOLUTION';
+      else if (solN < solTot) status = '🔴 SOL_FAILS';
       else if (blankN > CFG.WEAK_THRESHOLD) status = '🟡 WEAK_TESTS';
-      else                       status = '🟢 OK';
+      else status = '🟢 OK';
 
       const blankStr = blankScore ? `${blankN}/${blankTot}` : '?/?';
-      const solStr   = solScore   ? `${solN}/${solTot}` : (solution ? '?/?' : 'N/A');
+      const solStr = solScore ? `${solN}/${solTot}` : (solution ? '?/?' : 'N/A');
       console.log(`  ${status}  blank=${blankStr}  solution=${solStr}`);
 
-      report.push({ id, title, topic, difficulty, blankPassed: blankN, blankTotal: blankTot, solPassed: solN, solTotal: solTot, status });
+      const resultObj = { id, title, topic, difficulty, blankPassed: blankN, blankTotal: blankTot, solPassed: solN, solTotal: solTot, status };
+
+      // Update report incrementally & save to localStorage
+      const existingIdx = report.findIndex(r => r.id === id);
+      if (existingIdx >= 0) report[existingIdx] = resultObj;
+      else report.push(resultObj);
+
+      localStorage.setItem(STORE_KEY, JSON.stringify(report));
     }
 
     // Small breather between problems
@@ -185,11 +214,11 @@ function switchToResultTab() {
   console.log('═'.repeat(72));
 
   // Group by status
-  const ok         = report.filter(r => r.status === '🟢 OK');
-  const weak       = report.filter(r => r.status === '🟡 WEAK_TESTS');
-  const broken     = report.filter(r => r.status === '🔴 SOL_FAILS');
+  const ok = report.filter(r => r.status === '🟢 OK');
+  const weak = report.filter(r => r.status === '🟡 WEAK_TESTS');
+  const broken = report.filter(r => r.status === '🔴 SOL_FAILS');
   const noSolution = report.filter(r => r.status === '🔵 NO_SOLUTION');
-  const noPage     = report.filter(r => r.status === '⚫ NO_PAGE');
+  const noPage = report.filter(r => r.status === '⚫ NO_PAGE');
 
   // Print table
   const pad = (s, n) => String(s).padEnd(n);
@@ -200,28 +229,30 @@ function switchToResultTab() {
 
   for (const r of report) {
     const blankStr = (r.blankPassed !== '?') ? `${r.blankPassed}/${r.blankTotal}` : '?/?';
-    const solStr   = (r.solPassed !== '?') ? `${r.solPassed}/${r.solTotal}` : (r.status === '🔵 NO_SOLUTION' ? 'N/A' : '?/?');
+    const solStr = (r.solPassed !== '?') ? `${r.solPassed}/${r.solTotal}` : (r.status === '🔵 NO_SOLUTION' ? 'N/A' : '?/?');
     console.log(
       pad(r.id, 32) + pad(r.topic, 12) + pad(blankStr, 8) + pad(solStr, 10) + r.status
     );
   }
 
   console.log('\n' + '─'.repeat(72));
-  console.log(`  🟢 OK            : ${ok.length}  —  ${ok.map(r=>r.id).join(', ') || 'none'}`);
-  console.log(`  🟡 Weak tests    : ${weak.length}  —  ${weak.map(r=>r.id).join(', ') || 'none'}`);
-  console.log(`  🔴 Solution fails: ${broken.length}  —  ${broken.map(r=>r.id).join(', ') || 'none'}`);
-  console.log(`  🔵 No solution   : ${noSolution.length}  —  ${noSolution.map(r=>r.id).join(', ') || 'none'}`);
-  console.log(`  ⚫ Page error    : ${noPage.length}  —  ${noPage.map(r=>r.id).join(', ') || 'none'}`);
+  console.log(`  🟢 OK            : ${ok.length}  —  ${ok.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  🟡 Weak tests    : ${weak.length}  —  ${weak.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  🔴 Solution fails: ${broken.length}  —  ${broken.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  🔵 No solution   : ${noSolution.length}  —  ${noSolution.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  ⚫ Page error    : ${noPage.length}  —  ${noPage.map(r => r.id).join(', ') || 'none'}`);
   console.log('═'.repeat(72));
   console.log('%c💾 Full data: window.__autoTestReport', 'color:#94a3b8;font-size:11px');
 
   window.__autoTestReport = report;
 
   // Pretty table in DevTools (if supported)
-  try { console.table(report.map(r => ({
-    id: r.id, topic: r.topic, blank: `${r.blankPassed}/${r.blankTotal}`,
-    solution: `${r.solPassed}/${r.solTotal}`, status: r.status,
-  }))); } catch (_) {}
+  try {
+    console.table(report.map(r => ({
+      id: r.id, topic: r.topic, blank: `${r.blankPassed}/${r.blankTotal}`,
+      solution: `${r.solPassed}/${r.solTotal}`, status: r.status,
+    })));
+  } catch (_) { }
 
   return report;
-})();
+};

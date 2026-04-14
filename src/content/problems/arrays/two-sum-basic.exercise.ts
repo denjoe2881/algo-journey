@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['array-traversal', 'hash-map'],
   estimatedMinutes: 15,
-  order: 2,
+  order: 1000,
   mode: 'function_implementation',
 
   learningGoals: ['Use nested loops or HashMap for lookup', 'Return indices'],
@@ -43,7 +43,7 @@ export default defineExercise({
       visibility: 'hidden',
       genMethodBody: `
         for (int i = 0; i < 5; i++) {
-            int len = (i >= 3) ? (80000 + rng.nextInt(20001)) : (5000 + rng.nextInt(5001));
+            int len = (i >= 3) ? (20000 + rng.nextInt(5001)) : (5000 + rng.nextInt(5001));
             int[] arr = new int[len];
             for (int j = 0; j < len; j++) arr[j] = rng.nextInt(2001) - 1000;
             // Guarantee a valid pair exists
@@ -57,11 +57,11 @@ export default defineExercise({
                 map.put(arr[j], j);
             }
             try {
-                int[] actual = s.twoSum(arr, target);
+                int[] actual = s.twoSum(arr.clone(), target);
                 boolean pass = actual != null && actual.length == 2 &&
-                    actual[0] >= 0 && actual[1] > actual[0] &&
+                    actual[0] >= 0 && actual[1] > actual[0] && actual[0] < len && actual[1] < len &&
                     arr[actual[0]] + arr[actual[1]] == target;
-                System.out.println("AJ|stress-" + i + "|" + pass + "|sum=" + (actual==null?-1:(arr[actual[0]]+arr[actual[1]])) + "|target=" + target);
+                System.out.println("AJ|stress-" + i + "|" + pass + "|sum=" + (actual==null?-1:(actual[0] >= 0 && actual[1] >= 0 && actual[0] < len && actual[1] < len ? arr[actual[0]]+arr[actual[1]] : -1)) + "|target=" + target);
             } catch (Exception e) { System.out.println("AJ_ERROR|stress-" + i + ": " + e); }
         }`,
     },

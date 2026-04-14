@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'easy',
   tags: ['linear-search', 'counting', 'cse201'],
   estimatedMinutes: 15,
-  order: 99,
+  order: 423,
   mode: 'function_implementation',
   
   learningGoals: ['Track local state and global maximum', 'Iterate and compare adjacent elements'],

@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['two-pointers', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 426,
   mode: 'function_implementation',
   
   learningGoals: ['Use the two-pointer technique to find pairs efficiently', 'Take advantage of sorted data'],
@@ -40,7 +40,7 @@ export default defineExercise({
       visibility: 'hidden',
       genMethodBody: `
         for (int i = 0; i < 5; i++) {
-            int len = (i >= 3) ? (80000 + rng.nextInt(20001)) : (5000 + rng.nextInt(5001));
+            int len = (i >= 3) ? (20000 + rng.nextInt(5001)) : (5000 + rng.nextInt(5001));
             int[] arr = new int[len];
             for (int j = 0; j < len; j++) arr[j] = rng.nextInt(2000001) - 1000000;
             java.util.Arrays.sort(arr);

@@ -494,6 +494,45 @@ async function initMonacoEditor(exercise: Exercise, initialCode: string): Promis
       automaticLayout: true,
     });
 
+    // Register robust Prettier formatting provider for Java
+    monaco.languages.registerDocumentFormattingEditProvider('java', {
+      async provideDocumentFormattingEdits(model) {
+        const text = model.getValue();
+        try {
+          const prettier = await import('prettier/standalone');
+          const prettierJava = await import('prettier-plugin-java');
+          
+          const formatted = await prettier.format(text, {
+            parser: 'java',
+            plugins: [prettierJava.default || prettierJava],
+            tabWidth: 4,
+            printWidth: 100,
+          });
+
+          return [{
+            range: model.getFullModelRange(),
+            text: formatted
+          }];
+        } catch (err) {
+          console.error("Format error:", err);
+          return [];
+        }
+      }
+    });
+
+    // Explicitly add Ctrl+Shift+F to trigger formatting
+    editorInstance.addAction({
+      id: 'format-code',
+      label: 'Format Document',
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF,
+        monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF,
+      ],
+      run: (ed) => {
+        ed.getAction('editor.action.formatDocument')?.run();
+      }
+    });
+
     // Auto-save draft on change
     let saveTimeout: ReturnType<typeof setTimeout>;
     editorInstance.onDidChangeModelContent(() => {

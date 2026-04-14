@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['two-pointers', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 428,
   mode: 'function_implementation',
   
   learningGoals: ['Traverse two arrays simultaneously', 'Maintain sorted order while finding overlaps'],

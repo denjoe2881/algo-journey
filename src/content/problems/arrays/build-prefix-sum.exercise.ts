@@ -9,7 +9,7 @@ export default defineExercise({
   difficulty: 'medium',
   tags: ['prefix-sum', 'cse201'],
   estimatedMinutes: 20,
-  order: 99,
+  order: 431,
   mode: 'function_implementation',
   
   learningGoals: ['Understand the prefix sum concept', 'Accumulate sums optimally'],
