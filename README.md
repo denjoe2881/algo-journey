@@ -1,191 +1,138 @@
 # algo-journey
 
-A browser-based coding playground for learning algorithms and core object-oriented programming with **Java-like syntax**.
+Practice programming problems in a **LeetCode-style experience**, directly in your browser.
 
-`algo-journey` is designed as a lightweight teaching platform where learners can write code that feels close to real Java, click **Run**, and immediately see output or test results directly in the browser.
-
-The first version focuses on a practical subset of Java for introductory programming, DSA, and basic OOP:
-
-- classes and methods
-- arrays and strings
-- loops and recursion
-- `List`, `ArrayList`
-- `Map`, `HashMap`, `Hashtable`
-- common utility classes
-- function-style and class-based exercises
-
-The project is intentionally built on top of existing open-source tools instead of reinventing a Java parser or browser runtime from scratch.
+`algo-journey` is an open-source learning platform for **students and educators**. Learners pick a problem, write code, click **Run**, and see results immediately — with **basic Java** checked entirely on the browser, without requiring a backend judge.
 
 ---
 
-## Why this project exists
+## What learners can do
 
-Most browser-based coding playgrounds either:
-
-- target JavaScript first,
-- require a backend runner,
-- or do not fit well for teaching Java fundamentals step by step.
-
-`algo-journey` aims to provide a better learning path:
-
-- code that looks like normal Java,
-- execution directly in the browser,
-- fast feedback for students,
-- low infrastructure cost for early versions,
-- an architecture that can grow into a more advanced judge later.
+- Solve common programming exercises in a familiar online-judge style
+- Practice by **topic** and **difficulty**
+- See **compile errors, runtime errors, and test results instantly**
+- Track progress locally in the browser
+- Learn step by step without a heavy setup
 
 ---
 
-## Project goals
+## What makes this project different
 
-### Primary goals
+### Browser-side judging
+For V1, code checking for **basic Java** runs fully in the browser.
 
-- Let learners write Java-like code in the browser.
-- Let them run code instantly without depending on a full backend judge.
-- Support the core Java concepts needed for introductory algorithms and OOP.
-- Keep the system modular so future versions can add hidden tests, persistence, analytics, submissions, and server-side execution.
+That means:
+- faster feedback
+- simpler deployment
+- lower infrastructure cost
+- no backend judge required for core practice
 
-### Non-goals for V1
+### Built for learning
+This project is not trying to be a full Java IDE.
+It is designed to help students practice:
+- algorithms
+- problem solving
+- core programming logic
+- introductory object-oriented programming
 
-Version 1 is **not** trying to be a full Java SE implementation.
-
-Out of scope for V1:
-
-- full Java compatibility
-- arbitrary third-party JAR support
-- reflection-heavy features
-- dynamic class loading
-- file system access
-- real networking from user code
-- multithreading exercises
-- Maven/Gradle-style package management
-- full IDE/LSP-grade Java intelligence
-
----
-
-## Technical direction
-
-The selected V1 stack is:
-
-- **Monaco Editor** for code editing
-- **Tree-sitter + tree-sitter-java** for fast syntax parsing and structural analysis
-- **teavm-javac** to compile Java source directly in the browser
-- **TeaVM** to generate runnable browser output
-- **Web Workers** for compile and runtime isolation
-
-This direction gives the best balance for V1:
-
-- close to real Java syntax
-- open-source friendly
-- browser-first execution
-- strong enough support for common collections and class-based exercises
-- much faster to implement than building a custom Java interpreter
+### Open source and extensible
+`algo-journey` is built to be easy to grow.
+Future contributors can extend it with:
+- more exercises
+- better hints and feedback
+- teacher workflows
+- saved submissions
+- cloud sync
+- more languages
+- optional hybrid backend execution
 
 ---
 
-## Supported Java subset for V1
+## Planned learner experience
 
-The platform is designed around a **supported Java subset**, not “all Java”.
+1. Open a problem
+2. Read the statement
+3. Write code in the browser
+4. Click **Run**
+5. See the result immediately
+6. Continue learning with progress saved locally
 
-### Language features
+---
 
-V1 is expected to support:
+## V1 scope
 
-- one or more classes per exercise
-- fields
-- constructors
-- instance methods
-- static methods
-- primitive types: `int`, `long`, `double`, `boolean`, `char`
-- `String`
-- one-dimensional and two-dimensional arrays
-- `if`, `else`, `switch` where practical
-- `for`, enhanced `for`, `while`, `do while`
+The first version focuses on:
+
+- **basic Java**
+- common algorithm exercises
+- LeetCode-style practice flow
+- browser-based judging
+- problem organization by topic and difficulty
+- local progress tracking
+
+Planned Java support includes common beginner-friendly features such as:
+
+- classes
+- methods
+- arrays
+- strings
+- loops
 - recursion
-- simple method overloading if stable
-- simple generics usage such as `List<Integer>` and `Map<String, Integer>`
-
-### Core library targets
-
-Collections and common utilities planned for V1 include:
-
 - `List`
 - `ArrayList`
-- `LinkedList`
 - `Map`
 - `HashMap`
 - `Hashtable`
-- `Set`
-- `HashSet`
-- `Queue`
-- `Deque`
-- `Stack`
-- `Arrays`
-- `Collections` (selected methods)
-- `Objects`
-- `StringBuilder`
-- `Math`
-
-### Restricted or unsupported in V1
-
-- `java.lang.reflect.*`
-- class loaders
-- arbitrary DOM access from user code
-- arbitrary network access
-- custom module/classpath behavior
-- threads and executors
 
 ---
 
-## Exercise modes
+## Who this is for
 
-The platform is planned to support three exercise styles:
+### Students
+A lightweight place to practice programming and see results quickly.
 
-### 1. Main program mode
-The learner writes a full Java program with `main` and runs it to see standard output.
+### Teachers
+A practical platform for classroom exercises and guided self-study.
 
-### 2. Function implementation mode
-The learner implements a method or solution body, and the platform injects a harness to generate tests and evaluate results.
-
-### 3. Class design mode
-The learner implements a class, then the platform creates objects and invokes methods through a harness.
-
-For V1, **function implementation mode** is the main target because it fits algorithm practice best.
+### Contributors
+An open-source foundation for browser-based coding education.
 
 ---
 
-## High-level architecture
+## Project direction
 
-```text
-Browser UI
- ├─ Monaco Editor
- ├─ Problem Panel
- ├─ Console / Test Result Panel
- └─ Run Coordinator
-        │
-        ▼
-Analysis Layer
- ├─ Tree-sitter parser
- ├─ syntax tree services
- └─ early structural validation
-        │
-        ▼
-Compile Worker
- ├─ teavm-javac
- ├─ source assembly
- ├─ diagnostics
- └─ TeaVM compilation
-        │
-        ▼
-Run Worker / Sandbox
- ├─ compiled artifact loading
- ├─ harness execution
- ├─ stdout/stderr capture
- ├─ timeout enforcement
- └─ structured result generation
-        │
-        ▼
-Result Processor
- ├─ expected vs actual comparison
- ├─ per-test reporting
- └─ compile/runtime error presentation
+`algo-journey` starts with a clear and practical goal:
+
+> Help students practice common programming problems in a browser-first environment with immediate feedback.
+
+From there, it can grow into a richer open-source learning platform.
+
+---
+
+## Technical foundation
+
+The current V1 direction uses open-source browser-first tooling:
+
+- **Monaco Editor**
+- **Tree-sitter**
+- **teavm-javac**
+- **TeaVM**
+- **Web Workers**
+
+These tools make it possible to support browser-based Java practice without depending on a traditional server-side judge for the first version.
+
+---
+
+## Repository docs
+
+- `Architecture.md` — system architecture and product boundaries
+- `Tasks.md` — implementation phases and tracking
+- `ExerciseSchema.md` — exercise format and evaluation schema
+
+---
+
+## Contributing
+
+If you care about programming education, browser tooling, or open-source learning platforms, this project is built to be easy to understand and extend.
+
+Contributions are welcome.
