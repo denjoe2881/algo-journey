@@ -18,7 +18,7 @@ const DEFAULT_SPLIT = 50; // percent for left panel
 export async function renderProblemPage(container: HTMLElement, slug: string): Promise<void> {
   container.className = 'app-main app-main--full';
 
-  const exercise = exerciseLoader.getExercise(slug);
+  const exercise = await exerciseLoader.getExerciseAsync(slug);
   if (!exercise) {
     render(container, el('div', { className: 'empty-state', children: [
       el('h2', { text: 'Problem not found' }),

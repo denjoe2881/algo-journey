@@ -61,103 +61,101 @@ src/
 
 ## Adding a New Exercise
 
-This is the most common contribution. You need to edit two files:
+This is the most common contribution. With our file-per-problem architecture, you need to create three files in the appropriate topic folder under `src/content/problems/`.
 
-### Step 1: Add catalog entry
+For example, to add a "Two Sum" problem to the `arrays` topic, you would create:
 
-Edit `src/content/catalog-data.ts` and add a new `CatalogEntry`:
+### Step 1: Add the Exercise Definition (`.exercise.ts`)
 
-```typescript
-{
-  id: 'your-problem-id',
-  slug: 'your-problem-id',      // URL-friendly, must match id
-  title: 'Your Problem Title',
-  summary: 'One-line description.',
-  topic: 'arrays',              // See Topic type for options
-  difficulty: 'easy',           // 'easy' | 'medium' | 'hard'
-  tags: ['relevant-tag'],
-  estimatedMinutes: 10,
-  order: 1,                     // Display order within the topic
-  mode: 'function_implementation',
-}
-```
-
-### Step 2: Add full exercise definition
-
-Edit `src/content/exercise-registry.ts` and add an `Exercise` object:
+Create `src/content/problems/arrays/two-sum.exercise.ts`. This file defines the metadata, statement, and starter code.
 
 ```typescript
-'your-problem-id': {
-  // Same metadata as catalog entry, plus:
+import { defineExercise } from '../../_loader';
+
+export default defineExercise({
+  id: 'two-sum',
   version: 1,
-  learningGoals: ['Goal 1', 'Goal 2'],
-  statement: 'Full problem statement with `backtick` code formatting.',
-  constraints: ['Constraint 1', 'Constraint 2'],
+  title: 'Two Sum',
+  summary: 'Find two numbers that add up to a target.',
+  topic: 'arrays',              // Must match one of the defined Topic types
+  difficulty: 'easy',           // 'easy' | 'medium' | 'hard'
+  tags: ['hash-map'],
+  estimatedMinutes: 15,
+  order: 99,                    // Display order within the topic
+  mode: 'function_implementation',
+  
+  learningGoals: ['Use HashMap for O(1) lookup'],
+  statement: 'Given an array and a target, return indices of the two numbers such that they add up to target.',
+  constraints: ['Exactly one valid answer exists.'],
   examples: [
-    { input: 'arr = [1, 2, 3]', output: '6' },
+    { input: 'arr = [2, 7, 11, 15], target = 9', output: '[0, 1]' },
   ],
-  editableFiles: [{
-    path: 'Solution.java',
-    role: 'main',
-    starter: `class Solution {
-    int yourMethod(int[] arr) {
+  
+  starter: {
+    file: 'Solution.java',
+    code: `class Solution {
+    int[] twoSum(int[] arr, int target) {
         // Write your code here
-        return 0;
+        return new int[]{};
     }
-}`,
-  }],
+}`
+  },
+
   requiredStructure: {
     className: 'Solution',
-    methodName: 'yourMethod',
-    signature: 'int yourMethod(int[] arr)',
+    methodName: 'twoSum',
+    signature: 'int[] twoSum(int[] arr, int target)',
   },
-  limits: {
-    timeLimitMs: 1000,
-    outputLimitBytes: 32768,
-    maxVisibleTests: 2,
-    maxHiddenTests: 10,
-  },
+
   evaluation: {
-    comparator: 'exact_json',
-    visibleTests: [
-      { name: 'example-1', args: [[1, 2, 3]], expected: 6 },
-    ],
+    comparator: 'unordered_json',
+    timeLimitMs: 1000,
   },
+});
+```
+
+### Step 2: Add the Test Generator (`.gen.ts`)
+
+Create `src/content/problems/arrays/two-sum.gen.ts`. We use deterministic seeded RNG for generating hidden tests.
+
+```typescript
+import { defineTests } from '../../_test-utils';
+
+export default defineTests('two-sum', (t, rng) => {
+  // ── Visible Tests (shown to learner) ──
+  t.visible('example-1', { args: [[2, 7, 11, 15], 9], expected: [0, 1] });
+
+  // ── Hidden Tests (edge cases and stress tests) ──
+  t.hidden('negative-values', { args: [[-1, -2, -3], -5], expected: [1, 2] });
+  
+  // Deterministic random generation using the provided seeded 'rng'
+  const largeArr = rng.intArray(1000, 1, 5000);
+  t.hidden('stress-1k', { args: [largeArr, largeArr[0]! + largeArr[999]!], expected: [0, 999] });
+});
+```
+
+### Step 3: Add the Reference Solution (`.solution.java`)
+
+Create `src/content/problems/arrays/two-sum.solution.java`. This acts as the correct implementation for testing.
+
+```java
+import java.util.HashMap;
+
+class Solution {
+    int[] twoSum(int[] arr, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (map.containsKey(target - arr[i])) {
+                return new int[]{map.get(target - arr[i]), i};
+            }
+            map.put(arr[i], i);
+        }
+        return new int[]{};
+    }
 }
 ```
 
-### Adding Test Cases
-
-Test cases are defined within the `evaluation` block of your exercise definition in `src/content/exercise-registry.ts`. You must provide `args` (arguments passed to the function) and `expected` (the expected return value).
-
-#### Visible Tests
-These tests are shown directly to the user to help them understand the problem. Add them to the `visibleTests` array:
-
-```typescript
-  evaluation: {
-    comparator: 'exact_json',
-    visibleTests: [
-      { name: 'example-1', args: [[1, 2, 3]], expected: 6 },
-      { name: 'example-2', args: [[-1, -2, -3]], expected: -6 },
-    ],
-    // ...
-```
-
-#### Hidden Tests
-Hidden tests evaluate edge cases or performance and are not shown to the learner. Use the `hiddenTestStrategy` object set to `inline`:
-
-```typescript
-  evaluation: {
-    // ...
-    hiddenTestStrategy: {
-      type: 'inline',
-      tests: [
-        { name: 'hidden-1-edge-case', args: [[]], expected: 0 },
-        { name: 'hidden-2-large', args: [[100, 200, 300]], expected: 600 },
-      ]
-    }
-  }
-```
+That's it! Because we use Vite's `import.meta.glob` via `src/content/_loader.ts`, the new exercise will automatically appear in the catalog without needing to update any index files.
 
 ### Exercise Modes
 

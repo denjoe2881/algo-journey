@@ -1,19 +1,17 @@
 /* ═══════════════════════════════════════════════════════════
    Exercise Loader — Load and manage exercise content
+   Now powered by glob-discovered exercises from _loader.
    ═══════════════════════════════════════════════════════════ */
 
 import type { CatalogEntry, Exercise, Topic, Difficulty } from '../shared/types';
-
-// ── Embedded catalog data (inline for V1 simplicity) ──
-import { catalogData } from '../content/catalog-data';
-import { exerciseRegistry } from '../content/exercise-registry';
+import { getAllCatalogEntries, getFullExercise, hasExercise } from '../content/_loader';
 
 class ExerciseLoader {
   private catalog: CatalogEntry[] = [];
   private exerciseCache: Map<string, Exercise> = new Map();
 
   init(): void {
-    this.catalog = catalogData;
+    this.catalog = getAllCatalogEntries();
   }
 
   getCatalog(): CatalogEntry[] {
@@ -58,11 +56,29 @@ class ExerciseLoader {
       return this.exerciseCache.get(slug)!;
     }
 
-    const exercise = exerciseRegistry[slug] ?? null;
+    if (!hasExercise(slug)) return null;
+
+    // Load exercise asynchronously, but return a sync placeholder first
+    // The tests will be populated when the async load completes
+    void this.loadExerciseAsync(slug);
+
+    // For now return null — the UI should use getExerciseAsync
+    return this.exerciseCache.get(slug) ?? null;
+  }
+
+  /** Async exercise loading with full test suite */
+  async getExerciseAsync(slug: string): Promise<Exercise | null> {
+    if (this.exerciseCache.has(slug)) {
+      return this.exerciseCache.get(slug)!;
+    }
+    return this.loadExerciseAsync(slug);
+  }
+
+  private async loadExerciseAsync(slug: string): Promise<Exercise | null> {
+    const exercise = await getFullExercise(slug);
     if (exercise) {
       this.exerciseCache.set(slug, exercise);
     }
-
     return exercise;
   }
 

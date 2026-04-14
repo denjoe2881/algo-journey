@@ -101,18 +101,9 @@ export interface HiddenTestStrategy {
 }
 
 // ── Catalog ──
-export interface CatalogEntry {
-  id: string;
-  slug: string;
-  title: string;
-  summary: string;
-  topic: Topic;
-  difficulty: Difficulty;
-  tags: string[];
-  estimatedMinutes: number;
-  order?: number;
-  mode: ExerciseMode;
-}
+export type CatalogEntry = Pick<Exercise,
+  'id' | 'slug' | 'title' | 'summary' | 'topic' | 'difficulty' | 'tags' | 'estimatedMinutes' | 'order' | 'mode'
+>;
 
 // ── Run Results ──
 export type RunStatus =
