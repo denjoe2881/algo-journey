@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const searchDir = 'src/content/problems';
-const inputCsv = 'problems_catalog.csv';
+const searchDir = '../src/content/problems';
+const inputCsv = '../docs/problems_catalog.csv';
 
 function importStats(dir, catalogMap) {
     let count = 0;

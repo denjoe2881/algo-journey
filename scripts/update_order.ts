@@ -65,4 +65,4 @@ function updateOrder(dir) {
     }
 }
 
-updateOrder('src/content/problems');
+updateOrder('../src/content/problems');

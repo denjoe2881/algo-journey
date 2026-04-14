@@ -26,7 +26,7 @@ const CFG = {
   WAIT_SUBMIT: 4000,   // ms after clicking Submit for results
   WEAK_THRESHOLD: 4,   // blank passes > this → flag as WEAK_TESTS
   MAX_PROBLEMS: 9999,  // set lower to test a subset
-  SKIP_SLUGS: ['hello-world', 'simple-counter', 'min-stack'],      // e.g. ['hello-world'] to skip trivial problems
+  SKIP_SLUGS: ['hello-world'],      // e.g. ['hello-world'] to skip trivial problems
 };
 
 // ── Helpers ────────────────────────────────────────────────

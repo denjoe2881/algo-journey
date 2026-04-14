@@ -37,6 +37,11 @@ export function buildHarnessFiles(
   studentCode: string,
   tests: TestCase[],
 ): HarnessFiles {
+  if (exercise.mode === 'class_implementation') {
+    const harness = generateClassRunnerMain(exercise, tests, exercise.evaluation.javaGenerator);
+    return { 'Solution.java': studentCode, 'RunnerMain.java': harness };
+  }
+
   const sig = parseSignature(
     exercise.requiredStructure?.signature ?? inferSignatureFromStarter(exercise),
   );
@@ -74,9 +79,8 @@ function parseSignature(sig: string): Signature {
   // methodName is the last word before '('
   const beforeParen = trimmed.slice(0, parenOpen).trim();
   const lastSpace = beforeParen.lastIndexOf(' ');
-  if (lastSpace < 0) throw new Error(`Cannot parse signature (no space): "${sig}"`);
-  const returnType = beforeParen.slice(0, lastSpace).trim();
-  const methodName = beforeParen.slice(lastSpace + 1).trim();
+  const returnType = lastSpace < 0 ? '' : beforeParen.slice(0, lastSpace).trim();
+  const methodName = lastSpace < 0 ? beforeParen : beforeParen.slice(lastSpace + 1).trim();
 
   // Params: everything inside the outermost parens
   const parenClose = trimmed.lastIndexOf(')');
@@ -173,6 +177,7 @@ function equalExpr(ret: string, a: string, b: string): string {
 function toStringExpr(ret: string, v: string): string {
   if (ret.endsWith('[]'))  return `java.util.Arrays.toString(${v})`;
   if (ret === 'String')    return `(${v} == null ? "null" : ${v})`;
+  if (ret === 'double' || ret === 'Double') return `(String.valueOf(${v}).endsWith(".0") ? String.valueOf(${v}).substring(0, String.valueOf(${v}).length() - 2) : String.valueOf(${v}))`;
   return `String.valueOf(${v})`;
 }
 
@@ -243,6 +248,117 @@ ${javaGen.genMethodBody}
   return `${imports}public class RunnerMain {
     public static void main(String[] args) {
         Solution s = new Solution();
+${mainBody}${genCall}        System.out.println("__AJ_DONE__");
+    }
+${methods}
+${genMethod}
+}
+`;
+}
+
+// ── Generate RunnerMain.java (Class Mode) ─────────────────
+
+function generateClassRunnerMain(
+  exercise: Exercise,
+  tests: TestCase[],
+  javaGen?: JavaGenerator,
+): string {
+  const className = exercise.requiredStructure?.className ?? 'Solution';
+  const reqMethods = exercise.requiredStructure?.requiredMethods ?? [];
+  const sigMap = new Map<string, Signature>();
+  
+  for (const m of reqMethods) {
+    const s = parseSignature(m);
+    sigMap.set(s.methodName, s);
+  }
+
+  let methods = '';
+  let mainBody = '';
+
+  for (let i = 0; i < tests.length; i++) {
+    const test = tests[i]!;
+    const ops = test.operations ?? [];
+    const expectedArr = Array.isArray(test.expected) ? test.expected : [test.expected];
+
+    let testBody = `
+        java.util.ArrayList<String> actual = new java.util.ArrayList<>();
+        java.util.ArrayList<String> expected = new java.util.ArrayList<>();
+        ${className} obj = null;
+`;
+
+    // Process each operation
+    for (let opIdx = 0; opIdx < ops.length; opIdx++) {
+      const opArgs = ops[opIdx] as unknown[];
+      const opName = String(opArgs[0]);
+      const argsVal = opArgs.slice(1);
+      
+      // Expected value for this op
+      const expVal = expectedArr[opIdx];
+      const javaStringify = (v: any): string => {
+        if (v === null || v === undefined) return 'null';
+        if (Array.isArray(v)) return '[' + v.map(javaStringify).join(', ') + ']';
+        return String(v);
+      };
+      const safeExp = javaStringify(expVal);
+      testBody += `        expected.add(${toJavaLiteral(safeExp, 'String')});\n`;
+
+      const sig = sigMap.get(opName);
+      if (!sig) {
+        testBody += `        // Unknown op: ${opName}\n        actual.add("null");\n`;
+        continue;
+      }
+
+      const argLiterals = sig.params.map((p, pIdx) => toJavaLiteral(argsVal[pIdx], p.type)).join(', ');
+
+      if (sig.returnType === '') {
+         // constructor
+         testBody += `        obj = new ${className}(${argLiterals});\n        actual.add("null");\n`;
+      } else if (sig.returnType === 'void') {
+         testBody += `        if (obj != null) obj.${opName}(${argLiterals});\n        actual.add("null");\n`;
+      } else {
+         testBody += `        if (obj != null) {
+            ${sig.returnType} ret${opIdx} = obj.${opName}(${argLiterals});
+            actual.add(${toStringExpr(sig.returnType, `ret${opIdx}`)});
+        } else {
+            actual.add("null");
+        }\n`;
+      }
+    }
+
+    methods += `
+    private static void run_test_${i}() {
+        try {
+${testBody}
+            boolean pass = actual.equals(expected);
+            System.out.println("AJ|" + ${toJavaLiteral(test.name, 'String')} + "|" + pass + "|" + actual.toString() + "|" + expected.toString());
+        } catch (Exception e) {
+            System.out.println("AJ_ERROR|" + ${toJavaLiteral(test.name, 'String')} + ": " + e);
+        }
+    }`;
+
+    mainBody += `        run_test_${i}();\n`;
+  }
+
+  // OOP Java Generator
+  const genMethod = javaGen ? `
+    private static void runGeneratedTests(java.util.Random rng) {
+${javaGen.genMethodBody}
+    }` : '';
+
+  const genCall = javaGen
+    ? `        runGeneratedTests(new java.util.Random(${javaGen.seed}L));\n`
+    : '';
+
+  return `import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+
+public class RunnerMain {
+    public static void main(String[] args) {
 ${mainBody}${genCall}        System.out.println("__AJ_DONE__");
     }
 ${methods}

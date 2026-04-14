@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const searchDir = 'src/content/problems';
-const outputCsv = 'problems_catalog.csv';
+const searchDir = '../src/content/problems';
+const outputCsv = '../docs/problems_catalog.csv';
 
 function getStats(dir) {
     let results = [];
