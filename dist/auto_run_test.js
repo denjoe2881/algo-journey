@@ -256,3 +256,12 @@ window.auto_run_test = async function (onlyFailing = false) {
 
   return report;
 };
+
+// Initialize window.__autoTestReport from persistent storage immediately on script load
+try {
+  const saved = localStorage.getItem('algo_auto_test_report');
+  if (saved) {
+    window.__autoTestReport = JSON.parse(saved);
+    console.log('%c💾 Loaded previous auto_run_test report into window.__autoTestReport', 'color:#6ee7b7;font-size:11px');
+  }
+} catch (err) { }

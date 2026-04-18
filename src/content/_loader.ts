@@ -15,6 +15,7 @@ import type {
   RequiredStructure,
   CatalogEntry,
   TestCase,
+  HelperClass,
 } from '../shared/types';
 import type { TestSuite } from './_test-utils';
 
@@ -45,6 +46,9 @@ export interface ExerciseDefinition {
   };
 
   requiredStructure?: RequiredStructure;
+
+  /** Platform-injected helper classes (e.g. ListNode.java, TreeNode.java) */
+  helperClasses?: HelperClass[];
 
   evaluation: {
     comparator: ComparatorType;
@@ -226,6 +230,7 @@ function definitionToExercise(
       },
     ],
     requiredStructure: def.requiredStructure,
+    helperClasses: def.helperClasses,
     limits: {
       timeLimitMs: def.evaluation.timeLimitMs ?? 1000,
       outputLimitBytes: def.evaluation.outputLimitBytes ?? 32768,

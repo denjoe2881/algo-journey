@@ -37,20 +37,29 @@ export function buildHarnessFiles(
   studentCode: string,
   tests: TestCase[],
 ): HarnessFiles {
+  let result: HarnessFiles;
+
   if (exercise.mode === 'class_implementation') {
     const harness = generateClassRunnerMain(exercise, tests, exercise.evaluation.javaGenerator);
-    return { 'Solution.java': studentCode, 'RunnerMain.java': harness };
+    result = { 'Solution.java': studentCode, 'RunnerMain.java': harness };
+  } else {
+    const sig = parseSignature(
+      exercise.requiredStructure?.signature ?? inferSignatureFromStarter(exercise),
+    );
+    const harness = generateRunnerMain(
+      sig,
+      tests,
+      exercise.evaluation.javaGenerator,
+    );
+    result = { 'Solution.java': studentCode, 'RunnerMain.java': harness };
   }
 
-  const sig = parseSignature(
-    exercise.requiredStructure?.signature ?? inferSignatureFromStarter(exercise),
-  );
-  const harness = generateRunnerMain(
-    sig,
-    tests,
-    exercise.evaluation.javaGenerator,
-  );
-  return { 'Solution.java': studentCode, 'RunnerMain.java': harness };
+  // Inject platform helper classes (ListNode.java, TreeNode.java, etc.)
+  for (const helper of exercise.helperClasses ?? []) {
+    result[helper.fileName] = helper.code;
+  }
+
+  return result;
 }
 
 // ── Signature Parsing ─────────────────────────────────────
@@ -124,6 +133,16 @@ function inferSignatureFromStarter(exercise: Exercise): string {
 function toJavaLiteral(value: unknown, javaType: string): string {
   if (value === null || value === undefined) return 'null';
 
+  // ListNode — convert JS array to buildList() call
+  if (javaType === 'ListNode') {
+    if (Array.isArray(value)) {
+      if (value.length === 0) return 'null';
+      const elems = value.map(e => String(Math.trunc(e as number))).join(', ');
+      return `buildList(new int[]{${elems}})`;
+    }
+    return 'null';
+  }
+
   // primitive arrays: int[], long[], etc.
   if (javaType.endsWith('[]')) {
     const arr = value as unknown[];
@@ -165,7 +184,12 @@ function isListType(ret: string): boolean {
   return ret.startsWith('List<') || ret.startsWith('java.util.List<');
 }
 
+function isListNodeType(t: string): boolean {
+  return t === 'ListNode';
+}
+
 function equalExpr(ret: string, a: string, b: string): string {
+  if (isListNodeType(ret)) return `java.util.Objects.equals(listToString(${a}), listToString(${b}))`;
   if (ret.endsWith('[]'))   return `java.util.Arrays.equals(${a}, ${b})`;
   if (ret === 'String')     return `java.util.Objects.equals(${a}, ${b})`;
   if (isListType(ret))      return `java.util.Objects.equals(${a}, ${b})`;
@@ -175,6 +199,7 @@ function equalExpr(ret: string, a: string, b: string): string {
 }
 
 function toStringExpr(ret: string, v: string): string {
+  if (isListNodeType(ret)) return `listToString(${v})`;
   if (ret.endsWith('[]'))  return `java.util.Arrays.toString(${v})`;
   if (ret === 'String')    return `(${v} == null ? "null" : ${v})`;
   if (ret === 'double' || ret === 'Double') return `(String.valueOf(${v}).endsWith(".0") ? String.valueOf(${v}).substring(0, String.valueOf(${v}).length() - 2) : String.valueOf(${v}))`;
@@ -234,6 +259,7 @@ ${javaGen.genMethodBody}
   const needsList    = allTypes.includes('List');
   const needsMap     = allTypes.includes('Map');
   const needsSet     = allTypes.includes('Set');
+  const needsListNode = allTypes.includes('ListNode');
 
   const imports = [
     needsArrays ? 'import java.util.Arrays;'    : '',
@@ -245,6 +271,26 @@ ${javaGen.genMethodBody}
     needsSet    ? 'import java.util.HashSet;'    : '',
   ].filter(Boolean).join('\n') + (needsArrays || needsList || needsMap || needsSet ? '\n' : '');
 
+  // ListNode helper methods (buildList, listToString)
+  const listNodeHelpers = needsListNode ? `
+    static ListNode buildList(int[] arr) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        for (int v : arr) { curr.next = new ListNode(v); curr = curr.next; }
+        return dummy.next;
+    }
+
+    static String listToString(ListNode head) {
+        StringBuilder sb = new StringBuilder("[");
+        while (head != null) {
+            sb.append(head.val);
+            if (head.next != null) sb.append(", ");
+            head = head.next;
+        }
+        return sb.append("]").toString();
+    }
+` : '';
+
   return `${imports}public class RunnerMain {
     public static void main(String[] args) {
         Solution s = new Solution();
@@ -252,6 +298,7 @@ ${mainBody}${genCall}        System.out.println("__AJ_DONE__");
     }
 ${methods}
 ${genMethod}
+${listNodeHelpers}
 }
 `;
 }

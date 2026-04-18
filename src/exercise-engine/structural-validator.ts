@@ -131,6 +131,26 @@ export function validateStructure(
     }
   }
 
+  // ── Block re-declaration of platform helper classes (ListNode, TreeNode, etc.) ──
+  if (exercise.helperClasses && exercise.helperClasses.length > 0) {
+    for (const helper of exercise.helperClasses) {
+      // Extract class name from fileName (e.g. 'ListNode.java' → 'ListNode')
+      const helperClassName = helper.fileName.replace(/\.java$/, '');
+      const reDeclarationPattern = new RegExp(
+        `\\bclass\\s+${escapeRegex(helperClassName)}\\b`
+      );
+      if (reDeclarationPattern.test(code)) {
+        diagnostics.push({
+          file,
+          line: findBestLine(lines, helperClassName),
+          column: 1,
+          message: `Do not re-declare class '${helperClassName}'. It is provided by the platform. See the comment at the top of your code for its definition.`,
+          severity: 'error',
+        });
+      }
+    }
+  }
+
   return {
     valid: diagnostics.filter(d => d.severity === 'error').length === 0,
     diagnostics,

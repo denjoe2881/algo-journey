@@ -16,7 +16,14 @@ export type Topic =
   | 'sorting'
   | 'math'
   | 'classes'
-  | 'collections';
+  | 'collections'
+  | 'linked-lists';
+
+// ── Helper Classes (platform-injected, e.g. ListNode, TreeNode) ──
+export interface HelperClass {
+  fileName: string;  // e.g. 'ListNode.java'
+  code: string;      // full Java source
+}
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -40,6 +47,7 @@ export interface Exercise {
   examples: ExerciseExample[];
   editableFiles: EditableFile[];
   requiredStructure?: RequiredStructure;
+  helperClasses?: HelperClass[];
   limits: ExerciseLimits;
   evaluation: ExerciseEvaluation;
 }

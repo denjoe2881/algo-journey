@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    Catalog Page — Problem listing with filters
+   Filters are synced to URL hash params for sharing.
    ═══════════════════════════════════════════════════════════ */
 
 import { el, svgIcon, icons, render } from '../../shared/dom-utils';
@@ -9,16 +10,19 @@ import { router } from '../../app/router';
 import type { CatalogEntry, Topic, Difficulty, ProgressStatus } from '../../shared/types';
 
 // Active tag filter state (module-level so it persists across re-renders)
-let activeTagFilter: string | null = null;
+// Now supports multiple tags (AND logic)
+let activeTagFilters: Set<string> = new Set();
 
 export async function renderCatalogPage(container: HTMLElement): Promise<void> {
   container.className = 'app-main';
-  // Reset tag filter when navigating to catalog
-  activeTagFilter = null;
+
+  // Restore filters from URL hash params
+  const route = router.getCurrentRoute();
+  activeTagFilters = new Set(route.tags ?? []);
 
   const pageHeader = createPageHeader();
   const statsBar = await createStatsBar();
-  const filterBar = createFilterBar();
+  const filterBar = createFilterBar(route);
   const grid = el('div', { className: 'problem-grid', id: 'problem-grid' });
 
   render(container, pageHeader, statsBar, filterBar, grid);
@@ -66,7 +70,7 @@ async function createStatsBar(): Promise<HTMLElement> {
   return bar;
 }
 
-function createFilterBar(): HTMLElement {
+function createFilterBar(route: ReturnType<typeof router.getCurrentRoute>): HTMLElement {
   // Search
   const searchIcon = svgIcon(icons.search, 16);
   searchIcon.classList.add('filter-bar__search-icon');
@@ -75,6 +79,10 @@ function createFilterBar(): HTMLElement {
     id: 'filter-search',
     attrs: { type: 'text', placeholder: 'Search problems...' },
   });
+  // Restore search from URL
+  if (route.search) {
+    (searchInput as HTMLInputElement).value = route.search;
+  }
   const searchWrapper = el('div', {
     className: 'filter-bar__search-wrapper',
     children: [searchIcon as unknown as Node, searchInput],
@@ -86,9 +94,13 @@ function createFilterBar(): HTMLElement {
     id: 'filter-topic',
   });
   topicSelect.appendChild(el('option', { text: 'All Topics', attrs: { value: 'all' } }));
-  const topics: Topic[] = ['arrays', 'strings', 'loops', 'conditionals', 'recursion', 'searching', 'sorting', 'math', 'classes', 'collections'];
+  const topics: Topic[] = ['arrays', 'strings', 'loops', 'conditionals', 'recursion', 'searching', 'sorting', 'math', 'classes', 'collections', 'linked-lists'];
   for (const topic of topics) {
     topicSelect.appendChild(el('option', { text: capitalize(topic), attrs: { value: topic } }));
+  }
+  // Restore topic from URL
+  if (route.topic) {
+    (topicSelect as HTMLSelectElement).value = route.topic;
   }
 
   // Difficulty filter
@@ -101,9 +113,14 @@ function createFilterBar(): HTMLElement {
   for (const diff of diffs) {
     diffSelect.appendChild(el('option', { text: capitalize(diff), attrs: { value: diff } }));
   }
+  // Restore difficulty from URL
+  if (route.difficulty) {
+    (diffSelect as HTMLSelectElement).value = route.difficulty;
+  }
 
   // Wire up events
   const handleFilter = () => {
+    syncFiltersToUrl();
     const grid = document.getElementById('problem-grid');
     if (grid) renderProblemList(grid);
   };
@@ -112,57 +129,96 @@ function createFilterBar(): HTMLElement {
   topicSelect.addEventListener('change', handleFilter);
   diffSelect.addEventListener('change', handleFilter);
 
-  // Active tag chip (hidden until a tag is clicked)
-  const tagClearBtn = el('button', {
-    className: 'tag-filter__clear',
-    attrs: { 'aria-label': 'Clear tag filter', title: 'Remove tag filter' },
-    text: '\u00d7',
-    on: {
-      click: () => {
-        activeTagFilter = null;
-        const grid = document.getElementById('problem-grid');
-        if (grid) renderProblemList(grid);
-      },
-    },
+  // Active tags container (shows chips for each selected tag)
+  const tagsContainer = el('div', {
+    className: 'tag-filter__container',
+    id: 'active-tags-container',
   });
-  const tagChip = el('div', {
-    className: 'tag-filter__chip',
-    id: 'active-tag-filter',
-    children: [
-      el('span', { className: 'tag-filter__label', text: '' }),
-      tagClearBtn,
-    ],
-  });
-  tagChip.style.display = 'none';
 
   return el('div', {
     className: 'filter-bar animate-fade-in',
-    children: [searchWrapper, topicSelect, diffSelect, tagChip],
+    children: [searchWrapper, topicSelect, diffSelect, tagsContainer],
   });
+}
+
+/** Sync current filter state from DOM + activeTagFilters to URL */
+function syncFiltersToUrl(): void {
+  const topicEl = document.getElementById('filter-topic') as HTMLSelectElement | null;
+  const diffEl = document.getElementById('filter-difficulty') as HTMLSelectElement | null;
+  const searchEl = document.getElementById('filter-search') as HTMLInputElement | null;
+
+  router.updateCatalogParams({
+    topic: topicEl?.value || undefined,
+    difficulty: diffEl?.value || undefined,
+    tags: activeTagFilters.size > 0 ? [...activeTagFilters] : undefined,
+    search: searchEl?.value || undefined,
+  });
+}
+
+/** Render the active tag chips */
+function renderTagChips(): void {
+  const container = document.getElementById('active-tags-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (activeTagFilters.size === 0) return;
+
+  for (const tag of activeTagFilters) {
+    const chip = el('div', {
+      className: 'tag-filter__chip',
+      children: [
+        el('span', { className: 'tag-filter__label', text: tag }),
+        el('button', {
+          className: 'tag-filter__clear',
+          text: '\u00d7',
+          attrs: { 'aria-label': `Remove tag filter: ${tag}`, title: `Remove tag: ${tag}` },
+          on: {
+            click: () => {
+              activeTagFilters.delete(tag);
+              syncFiltersToUrl();
+              renderTagChips();
+              const grid = document.getElementById('problem-grid');
+              if (grid) renderProblemList(grid);
+            },
+          },
+        }),
+      ],
+    });
+    container.appendChild(chip);
+  }
+
+  // "Clear all" button when multiple tags
+  if (activeTagFilters.size > 1) {
+    const clearAll = el('button', {
+      className: 'tag-filter__clear-all',
+      text: 'Clear all',
+      on: {
+        click: () => {
+          activeTagFilters.clear();
+          syncFiltersToUrl();
+          renderTagChips();
+          const grid = document.getElementById('problem-grid');
+          if (grid) renderProblemList(grid);
+        },
+      },
+    });
+    container.appendChild(clearAll);
+  }
 }
 
 async function renderProblemList(grid: HTMLElement): Promise<void> {
   const searchEl = document.getElementById('filter-search') as HTMLInputElement | null;
   const topicEl = document.getElementById('filter-topic') as HTMLSelectElement | null;
   const diffEl = document.getElementById('filter-difficulty') as HTMLSelectElement | null;
-  const tagFilterEl = document.getElementById('active-tag-filter');
 
-  // Show/hide active tag filter chip
-  if (tagFilterEl) {
-    if (activeTagFilter) {
-      tagFilterEl.style.display = 'flex';
-      const label = tagFilterEl.querySelector('.tag-filter__label');
-      if (label) label.textContent = `Tag: ${activeTagFilter}`;
-    } else {
-      tagFilterEl.style.display = 'none';
-    }
-  }
+  // Render tag filter chips
+  renderTagChips();
 
   const entries = exerciseLoader.filterCatalog({
     search: searchEl?.value,
     topic: (topicEl?.value as Topic | 'all') ?? 'all',
     difficulty: (diffEl?.value as Difficulty | 'all') ?? 'all',
-    tag: activeTagFilter ?? undefined,
+    tags: activeTagFilters.size > 0 ? [...activeTagFilters] : undefined,
   });
 
   grid.innerHTML = '';
@@ -208,18 +264,23 @@ function createProblemCard(entry: CatalogEntry, status: ProgressStatus, index: n
     text: capitalize(entry.difficulty),
   });
 
-  // Tags — clickable for filtering
+  // Tags — clickable for multi-tag filtering
   const tagsEl = el('div', { className: 'problem-card__tags' });
   for (const tag of entry.tags.slice(0, 4)) {
-    const isActive = activeTagFilter === tag;
+    const isActive = activeTagFilters.has(tag);
     const tagEl = el('span', {
       className: `tag tag--clickable${isActive ? ' tag--active' : ''}`,
       text: tag,
-      attrs: { title: `Filter by tag: ${tag}` },
+      attrs: { title: isActive ? `Remove tag filter: ${tag}` : `Add tag filter: ${tag}` },
       on: {
         click: (e: Event) => {
           e.stopPropagation(); // prevent card navigation
-          activeTagFilter = activeTagFilter === tag ? null : tag;
+          if (activeTagFilters.has(tag)) {
+            activeTagFilters.delete(tag);
+          } else {
+            activeTagFilters.add(tag);
+          }
+          syncFiltersToUrl();
           const grid = document.getElementById('problem-grid');
           if (grid) renderProblemList(grid);
         },
@@ -250,7 +311,7 @@ function createProblemCard(entry: CatalogEntry, status: ProgressStatus, index: n
 // ── Helpers ──
 
 function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  return s.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
 function debounce(fn: () => void, ms: number): () => void {

@@ -23,6 +23,7 @@ class ExerciseLoader {
     difficulty?: Difficulty | 'all';
     search?: string;
     tag?: string;
+    tags?: string[];  // multi-tag filter (AND logic)
   }): CatalogEntry[] {
     let results = [...this.catalog];
 
@@ -34,9 +35,19 @@ class ExerciseLoader {
       results = results.filter(e => e.difficulty === options.difficulty);
     }
 
+    // Single tag filter (backward compat)
     if (options?.tag) {
       const tag = options.tag.toLowerCase();
       results = results.filter(e => e.tags.some(t => t.toLowerCase() === tag));
+    }
+
+    // Multi-tag filter (AND: exercise must have ALL selected tags)
+    if (options?.tags && options.tags.length > 0) {
+      const filterTags = options.tags.map(t => t.toLowerCase());
+      results = results.filter(e => {
+        const exerciseTags = e.tags.map(t => t.toLowerCase());
+        return filterTags.every(ft => exerciseTags.includes(ft));
+      });
     }
 
     if (options?.search) {
