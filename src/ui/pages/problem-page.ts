@@ -521,6 +521,18 @@ async function initMonacoEditor(exercise: Exercise, initialCode: string): Promis
   try {
     const monaco = await import('monaco-editor');
 
+    if (!window.MonacoEnvironment) {
+      window.MonacoEnvironment = {
+        getWorker: function (_moduleId: any, _label: string) {
+          // Fallback generic editor worker
+          return new Worker(
+            new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url),
+            { type: 'module' }
+          );
+        }
+      };
+    }
+
     // Dispose previous editor if exists
     if (editorInstance) {
       editorInstance.dispose();
