@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Reverse Linked List',
   summary: 'Reverse a singly linked list and return the new head.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'easy',
   tags: ['linked-list', 'pointer-manipulation', 'cse201'],
   estimatedMinutes: 15,
   order: 462,
   mode: 'function_implementation',
+  hints: [
+    'You need to keep track of three pointers: `prev`, `current`, and `next_node`.',
+    'Initialize `prev` to `null` and `current` to `head`.',
+    'Inside a loop, save the next node (`next_node = current.next`), then reverse the link by assigning `current.next = prev`.',
+    'Finally, move `prev` and `current` one step forward. Return `prev` as the new head when `current` becomes `null`.'
+  ],
 
   learningGoals: ['Three-pointer reversal technique', 'In-place linked list modification'],
   prerequisites: ['Linked list traversal'],

@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'reverse-array', version: 1, title: 'Reverse Array',
   summary: 'Reverse an integer array in place.', topic: 'arrays', difficulty: 'easy',
   tags: ['two-pointers', 'in-place', 'cse201'], estimatedMinutes: 10, order: 414, mode: 'function_implementation',
+  hints: [
+    'Use the two-pointer technique: one pointer `left` at the start (0), and one pointer `right` at the end (`length - 1`).',
+    'Swap the elements at `left` and `right`.',
+    'Increment `left` and decrement `right`.',
+    'Repeat this until `left` meets or passes `right`.'
+  ],
   learningGoals: ['Use two pointers to swap elements', 'Modify array in place'],
   statement: 'Given an integer array `arr`, reverse it in place and return the array.',
   constraints: ['Modify the original array.'],

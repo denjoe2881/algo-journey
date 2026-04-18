@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 407,
   mode: 'function_implementation',
+  hints: [
+    'Initialize `min_index` to 0. Assume the first element is the minimum.',
+    'Loop from index 1 to the end of the array.',
+    'If `numbers[i] < numbers[min_index]`, update `min_index = i`.',
+    'Return `min_index` at the end.'
+  ],
   
   learningGoals: ['Track the index of the running minimum'],
   statement: 'Given an array of integers `numbers`, find and return the index of its minimum value. If the minimum value occurs more than once, return the index of its first occurrence. The array is guaranteed to be non-empty.',

@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'sum-array', version: 1, title: 'Sum of Array',
   summary: 'Compute the sum of all elements in an integer array.', topic: 'arrays', difficulty: 'easy',
   tags: ['accumulator', 'cse201'], estimatedMinutes: 8, order: 408, mode: 'function_implementation',
+  hints: [
+    'Initialize a `sum` variable to 0 (make sure it is large enough if the numbers are huge, but a standard `int` or long should be fine).',
+    'Use a loop to iterate through every element in the array.',
+    'Add each element to your `sum` variable.',
+    'Return the resulting `sum`.'
+  ],
   learningGoals: ['Use an accumulator variable', 'Iterate through all elements'],
   statement: 'Given an integer array `arr`, return the sum of all its elements.',
   constraints: ['The array may be empty (return 0).'],

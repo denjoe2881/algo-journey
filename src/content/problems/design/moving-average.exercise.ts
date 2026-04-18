@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 439,
   mode: 'class_implementation',
+  hints: [
+    'Use a `Queue` (e.g. `LinkedList` or `ArrayDeque`) to store up to `size` elements.',
+    'Keep a running `sum` variable.',
+    'When adding a new value, add it to the queue and add it to `sum`.',
+    'If the queue size exceeds the window `size`, poll the oldest element from the front of the queue and subtract it from `sum`.'
+  ],
 
   learningGoals: ['Design a class with internal state', 'Use a queue to represent a sliding window'],
   statement: `Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.

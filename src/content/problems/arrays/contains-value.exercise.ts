@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 403,
   mode: 'function_implementation',
+  hints: [
+    'This problem requires a basic linear search.',
+    'Use a `for` loop to check each element in the array one by one.',
+    'If the current element equals the target value, immediately return `true`.',
+    'If the loop finishes checking all elements without finding the target, return `false`.'
+  ],
   
   learningGoals: ['Linear Array Traversal', 'Early exit when condition met'],
   statement: 'Given an array of integers `numbers` and an integer `target`, return `true` if `target` exists in the array, and `false` otherwise.',

@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 412,
   mode: 'function_implementation',
+  hints: [
+    'A `HashSet` is perfect for finding unique elements because it automatically discards duplicates.',
+    'Initialize an empty `HashSet`.',
+    'Use a loop to add every element of the array into the `HashSet`.',
+    'Return the `size()` of the `HashSet`.'
+  ],
   
   learningGoals: ['Use a collection to track seen elements', 'Deduplicate values'],
   statement: 'Given an array of integers `numbers`, find and return the total number of unique values that appear in the array.',

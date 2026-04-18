@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 45,
   order: 447,
   mode: 'class_implementation',
+  hints: [
+    'An optimal LRU Cache uses a combination of a `HashMap` and a **Doubly-Linked List**.',
+    'The `HashMap` maps keys to their Corresponding Node in the linked list, giving O(1) access.',
+    'The Doubly-Linked List keeps track of the "most recently used" order.',
+    'Whenever a key is accessed or added, move its node to the "head" (most recently used) side of the list. If capacity is exceeded, remove the node at the "tail" (least recently used).'
+  ],
 
   learningGoals: ['Combine Maps and Doubly Linked Lists to achieve O(1) time complexity', 'Manage complex state of head/tail pointers and map synchronization'],
   statement: `Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.

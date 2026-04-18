@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 417,
   mode: 'function_implementation',
+  hints: [
+    'We are looking for the second smallest or second largest element.',
+    'To find the second maximum, keep track of `max1` (largest) and `max2` (second largest). Initialize both to very small values.',
+    'Iterate through the array. If the current number `num > max1`, update `max2 = max1` and `max1 = num`.',
+    'If `num > max2` but `num < max1`, just update `max2 = num`.'
+  ],
   
   learningGoals: ['Filter unique distinct values', 'Find second extreme bounds'],
   statement: 'Given an array of integers `numbers` and a string `mode` ("largest" or "smallest"), return the second distinct extreme value (either the second distinct largest or the second distinct smallest). If no such second distinct value exists (e.g. fewer than 2 distinct values), return `null`.',

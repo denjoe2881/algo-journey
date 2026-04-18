@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 402,
   mode: 'function_implementation',
+  hints: [
+    'Use a `for` loop, but start from the end of the array (`length - 1`) and decrement down to 0.',
+    'If `numbers[i] == target`, immediately return `i` since this is the first match from the end.',
+    'If the loop finishes without finding the target, return `-1`.'
+  ],
   
   learningGoals: ['Iterate array backwards', 'Return early when found'],
   statement: 'Given an array of integers `numbers` and an integer `target`, return the last index at which `target` appears in the array. If it does not exist, return `-1`.',

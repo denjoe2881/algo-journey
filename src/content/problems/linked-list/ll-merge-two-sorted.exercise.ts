@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Merge Two Sorted Lists',
   summary: 'Merge two sorted linked lists into one sorted linked list.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'medium',
   tags: ['linked-list', 'merge', 'sorting', 'cse201'],
   estimatedMinutes: 20,
   order: 464,
   mode: 'function_implementation',
+  hints: [
+    'Create a dummy node to act as the start of your merged list. A `current` pointer should track the end of this new list.',
+    "While both `l1` and `l2` are not null, compare their values. Append the smaller node to `current.next` and advance that list's pointer.",
+    'Always move the `current` pointer forward after appending.',
+    'If one list runs out, append the remainder of the other list directly to `current.next`.'
+  ],
 
   learningGoals: ['Merge technique for linked lists', 'Dummy head pattern'],
   prerequisites: ['Linked list traversal', 'Merge sorted arrays'],

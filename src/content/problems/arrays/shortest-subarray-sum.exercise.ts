@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 25,
   order: 430,
   mode: 'function_implementation',
+  hints: [
+    'Since all numbers are positive, we can use the "sliding window" (two-pointer) approach optimally.',
+    'Keep a window from `left` to `right`. Expand `right` and add its value to your `current_sum`.',
+    'Whenever `current_sum >= target`, you found a valid subarray! Record the window length `right - left + 1`.',
+    'Then, try shrinking the window by moving `left` forward (and subtracting `numbers[left]` from `current_sum`) to find if there is an even shorter valid subarray.',
+    'Return 0 if no subarray meets the condition.'
+  ],
   
   learningGoals: ['Apply sliding window techniques to variable-length subarrays'],
   statement: 'Given an array of **positive** integers `numbers` and an integer `target`, return the length of the shortest contiguous subarray whose sum is greater than or equal to `target`. If there is no such subarray, return `0`.',

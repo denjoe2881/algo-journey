@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 25,
   order: 432,
   mode: 'function_implementation',
+  hints: [
+    'If we calculate the sum from scratch for every query, it will be too slow for many queries.',
+    'Instead, precompute a prefix sum array such that `prefix[i]` stores the sum of the first `i` elements.',
+    'Then, the sum of any range from `i` to `j` can be computed in O(1) time as `prefix[j + 1] - prefix[i]`.'
+  ],
   
   learningGoals: ['Understand and implement the prefix sum technique', 'Optimize multiple range queries'],
   statement: 'Given an array of integers `numbers` and a list of queries where each query is a pair of indices `[l, r]`, return a new list of integers where the `i`-th integer is the sum of the elements in `numbers` from index `l` to `r` (inclusive). Use the prefix sum technique for maximum efficiency.',

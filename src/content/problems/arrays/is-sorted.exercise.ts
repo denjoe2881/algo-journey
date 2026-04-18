@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 419,
   mode: 'function_implementation',
+  hints: [
+    'Loop through the array from index 0 to `length - 2`.',
+    'Compare `arr[i]` and `arr[i+1]`. If `arr[i] > arr[i+1]`, the array is not sorted, so return `false`.',
+    'If the loop completes without finding any such out-of-order pair, return `true`.'
+  ],
   
   learningGoals: ['Check adjacent elements', 'Early exit when condition fails'],
   statement: 'Given an array of integers `numbers`, return `true` if the array is sorted in non-decreasing order (elements are equal to or larger than the previous element), and `false` otherwise.',

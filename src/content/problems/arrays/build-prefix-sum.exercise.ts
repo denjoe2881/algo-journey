@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 431,
   mode: 'function_implementation',
+  hints: [
+    'Create a new array `ans` of size `n + 1` to hold the prefix sums.',
+    'The first element `ans[0]` is naturally 0. Loop through the input array starting from `i = 0`.',
+    'For each element, calculate the next prefix sum: `ans[i + 1] = ans[i] + numbers[i]`.',
+    'Return the resulting `ans` array.'
+  ],
   
   learningGoals: ['Understand the prefix sum concept', 'Accumulate sums optimally'],
   statement: 'Given an array of `n` integers `numbers`, return a prefix sum array of length `n+1` where `prefix[0] = 0` and `prefix[i]` equals the sum of elements from index `0` to `i-1`.',

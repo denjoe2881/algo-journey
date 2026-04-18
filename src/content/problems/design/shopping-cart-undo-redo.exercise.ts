@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 45,
   order: 450,
   mode: 'class_implementation',
+  hints: [
+    'Use two Stacks (or Lists) to represent the `undoHistory` and `redoHistory`.',
+    'Each history element should snapshot the entire state of the cart (e.g., a clone of the `HashMap` of items and quantities).',
+    'When an action occurs (add/remove), save a deep copy of the *current* state to `undoHistory`, clear `redoHistory`, and then perform the action.',
+    'When undoing, save the current state to `redoHistory` and restore the last state from `undoHistory`.'
+  ],
 
   learningGoals: ['Implement a robust Command Pattern handling maps', 'Differentiate between state-snapshots versus operation-deltas for undo strategies'],
   statement: `You are creating a shopping cart that supports adding, removing items, and maintains an undo/redo history.

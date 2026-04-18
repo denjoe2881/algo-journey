@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 421,
   mode: 'function_implementation',
+  hints: [
+    'A brute-force solution uses nested loops (O(N^2)). A more optimal approach uses a `HashMap` (O(N)).',
+    'We want to find pairs where `num + X = target`, which means we need `X = target - num`.',
+    'Iterate through the array. For each `num`, check if `target - num` is already in your map.',
+    'If it is, you found some pairs! Add their frequency to your total count.',
+    'Finally, add `num` to the map (incrementing its frequency) so it can form pairs with future elements.'
+  ],
   
   learningGoals: ['Find complementing values optimally', 'Guarantee pair uniqueness'],
   statement: 'Given an array of integers `numbers` and an integer `target`, return a list of all unique pairs `[a, b]` (with `a <= b`) such that `a + b == target`. The order of pairs in the output list does not matter.',

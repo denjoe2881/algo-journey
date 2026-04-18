@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 416,
   mode: 'function_implementation',
+  hints: [
+    'You can implement any standard sorting algorithm (like Bubble Sort, Selection Sort, or Insertion Sort).',
+    'For descending order, just change your comparison condition: we want larger elements to come before smaller ones.',
+    'For example in Bubble Sort, if `numbers[i] < numbers[i+1]`, you should swap them.'
+  ],
   
   learningGoals: ['Understand comparison-based sorting', 'Sort an array in descending order'],
   statement: 'Given an array of integers `numbers`, return a new array sorted in strictly descending order (from largest to smallest). The original array should not be modified.',

@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Middle of Linked List',
   summary: 'Find the middle node of a linked list using the slow/fast pointer technique.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'easy',
   tags: ['linked-list', 'slow-fast-pointer', 'two-pointers', 'cse201'],
   estimatedMinutes: 15,
   order: 463,
   mode: 'function_implementation',
+  hints: [
+    'Use the two-pointer technique (Tortoise and Hare).',
+    'Initialize `slow` and `fast` pointers at the `head`.',
+    'Move `slow` one step at a time, and move `fast` two steps at a time.',
+    'When `fast` reaches the end of the list (`fast == null` or `fast.next == null`), `slow` will be precisely at the middle node!'
+  ],
 
   learningGoals: ['Slow & fast pointer technique', 'Finding middle without knowing length'],
   prerequisites: ['Linked list traversal'],

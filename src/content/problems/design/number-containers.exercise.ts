@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 30,
   order: 446,
   mode: 'class_implementation',
+  hints: [
+    'Use a `HashMap` mapping indices to numbers (`indexToNumber`).',
+    'Use another `HashMap` mapping numbers to `TreeSet`s of indices (`numberToIndices`).',
+    'The `TreeSet` automatically keeps indices sorted, so `first()` easily gives the smallest index for a specific number in O(log N) time!'
+  ],
 
   learningGoals: ['Combine Maps and Priority Queues/Sorted Sets for complex tracking', 'Manage data relations across multiple data structures'],
   statement: `Design a number container system that can do the following:\n\n**Insert** or **Replace** a number at the given index in the system.

@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 420,
   mode: 'function_implementation',
+  hints: [
+    'Since the array is sorted, any duplicates will be adjacent to each other.',
+    'Use the two-pointer technique: one pointer `i` for iterating through the array, and another pointer `j` to mark where the last unique element was placed.',
+    'If `numbers[i] != numbers[j]`, increment `j` and update `numbers[j] = numbers[i]`.',
+    'Return `j + 1` because length is index + 1.'
+  ],
   
   learningGoals: ['Filter out elements that have been seen already linearly'],
   statement: 'Given an array of integers `numbers`, return a new array (or list) which contains the exact same elements in the original order, but with all duplicate occurrences removed (keep only the first occurrence).',

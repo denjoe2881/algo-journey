@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 25,
   order: 437,
   mode: 'class_implementation',
+  hints: [
+    'Use two Stacks.',
+    'The primary `stack` holds the actual elements.',
+    'The secondary `minStack` holds the minimum values corresponding to each state of the primary stack.',
+    'When pushing a new element `x`, push `Math.min(x, current_min)` to the `minStack` so the top of `minStack` is ALWAYS the current minimum.'
+  ],
 
   learningGoals: ['Combine multiple data structures', 'Maintain O(1) constraints for state retrieval'],
   statement: `Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.

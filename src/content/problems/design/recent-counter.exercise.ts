@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 440,
   mode: 'class_implementation',
+  hints: [
+    'Use a `Queue` to store the timestamps of the pings.',
+    'When a new `ping(t)` comes, add `t` to the queue.',
+    'Then, use a `while` loop to remove (`poll()`) any timestamps from the front of the queue that are strictly less than `t - 3000`.',
+    'The `size()` of the remaining queue is your answer!'
+  ],
 
   learningGoals: ['Design a system that tracks events over time', 'Efficiently maintain a sliding window using a queue'],
   statement: `You have a \`RecentCounter\` class which counts the number of recent requests within a certain time frame.

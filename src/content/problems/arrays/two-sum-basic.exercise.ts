@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 1000,
   mode: 'function_implementation',
+  hints: [
+    'You can use two nested loops to check all possible pairs, but this takes O(N^2) time.',
+    'A much faster approach is to use a `HashMap` (O(N) time).',
+    'Iterate through the array. For each number, calculate its `complement` (`target - current_number`).',
+    'If the `complement` is already in the `HashMap`, you found your pair! Return their indices.',
+    'Otherwise, add the current number and its index to the `HashMap`.'
+  ],
 
   learningGoals: ['Use nested loops or HashMap for lookup', 'Return indices'],
   statement: 'Given an integer array `numbers` and a `target`, return the indices of two numbers that add up to the target. You may assume exactly one valid answer exists.',

@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Get Nth Node',
   summary: 'Return the value of the node at index n (0-indexed) in a linked list.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'easy',
   tags: ['linked-list', 'traversal', 'index', 'cse201'],
   estimatedMinutes: 10,
   order: 461,
   mode: 'function_implementation',
+  hints: [
+    'Initialize a pointer `current` at the `head` and a `count` variable at 0.',
+    'Use a `while` loop to traverse the list.',
+    'When `count == n`, you have found the node! Return its `val`.',
+    'If `current` becomes `null` before `count` reaches `n`, the index is out of bounds.'
+  ],
 
   learningGoals: ['Indexed access in linked list', 'Counter-based traversal'],
   prerequisites: ['Linked list traversal'],

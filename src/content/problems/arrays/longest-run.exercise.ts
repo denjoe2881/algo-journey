@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 423,
   mode: 'function_implementation',
+  hints: [
+    'Handle empty arrays first. If empty, the longest run is 0.',
+    'Keep track of `current_run` and `max_run`. Initialize both to 1.',
+    'Loop through the array from index 1. If `numbers[i] == numbers[i-1]`, increment `current_run`.',
+    'If they are not equal, update `max_run = Math.max(max_run, current_run)` and reset `current_run` to 1.',
+    'After the loop, do one final update of `max_run` to account for runs ending at the very end.'
+  ],
   
   learningGoals: ['Track local state and global maximum', 'Iterate and compare adjacent elements'],
   statement: 'Given a non-empty array of integers `numbers`, find and return the length of the longest consecutive run of identical elements.',

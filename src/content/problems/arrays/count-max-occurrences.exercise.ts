@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 411,
   mode: 'function_implementation',
+  hints: [
+    'One approach is to loop through the array twice. First, find the maximum element.',
+    'Then, loop through the array a second time to count how many times this maximum element appears.',
+    'You can also do this in a single pass: keep track of the `max` and `count`. Iterate through the array. If you find a new max, update `max` and reset `count` to 1. If you see the same `max` again, increment `count`.'
+  ],
   
   learningGoals: ['Combine multiple logical passes over an array'],
   statement: 'Given a non-empty array of integers `numbers`, find its maximum value, and then return how many times that maximum value appears in the array.',

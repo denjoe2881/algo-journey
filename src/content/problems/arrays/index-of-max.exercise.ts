@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 406,
   mode: 'function_implementation',
+  hints: [
+    'Initialize `max_index` to 0. Assume the first element is the maximum.',
+    'Loop from index 1 to the end of the array.',
+    'If `numbers[i] > numbers[max_index]`, update `max_index = i`.',
+    'Return `max_index` at the end.'
+  ],
   
   learningGoals: ['Track the index of the running maximum'],
   statement: 'Given an array of integers `numbers`, find and return the index of its maximum value. If the maximum value occurs more than once, return the index of its first occurrence. The array is guaranteed to be non-empty.',

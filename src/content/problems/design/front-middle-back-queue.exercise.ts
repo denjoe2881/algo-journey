@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 30,
   order: 444,
   mode: 'class_implementation',
+  hints: [
+    'You can use two basic standard structures, like two `Deque`s (or `ArrayDeque`s) to represent the `leftHalf` and `rightHalf` of the queue.',
+    'Keep `leftHalf` and `rightHalf` balanced such that their sizes are equal or `leftHalf` has exactly one more element.',
+    'When adding to the middle, balance the deques, then push to the back of `leftHalf` (or front of `rightHalf`), then rebalance again!'
+  ],
 
   learningGoals: ['Understand doubly linked lists and complex index management', 'Optimize data structure for middle insertions'],
   statement: `Design a queue that supports \`push\` and \`pop\` operations in the front, middle, and back.

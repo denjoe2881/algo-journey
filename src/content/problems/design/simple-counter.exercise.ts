@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 436,
   mode: 'class_implementation',
+  hints: [
+    'Declare a private integer variable `count`.',
+    'Initialize it in the constructor with the given `startValue`.',
+    'In the `increment()` method, increase `count` by 1 and return its new value.'
+  ],
 
   learningGoals: ['Understand basic class structure', 'Manage internal state'],
   statement: 'Implement a class `Counter` with a constructor that takes an initial value, a method `increment()` to increase the value by 1, and a method `getValue()` to return the current value.',

@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 25,
   order: 438,
   mode: 'class_implementation',
+  hints: [
+    "You need two Stacks. Let's call them `pushStack` and `popStack`.",
+    'For `push()`, simply push the element onto `pushStack` (O(1)).',
+    'For `pop()` and `peek()`, you need the oldest element. If `popStack` is empty, pop everything one by one from `pushStack` and push them onto `popStack`. This automatically reverses their order!',
+    'Then, simply `pop()` or `peek()` from `popStack`.'
+  ],
 
   learningGoals: ['Understand how to reverse data flow using stacks', 'Amortized time complexity'],
   statement: `Implement a first-in-first-out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (\`push\`, \`peek\`, \`pop\`, and \`empty\`).

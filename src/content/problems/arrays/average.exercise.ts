@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 409,
   mode: 'function_implementation',
+  hints: [
+    'Check if the array is empty to avoid division by zero.',
+    'Declare a variable (e.g. `sum` of type `double`) to accumulate the total of all elements.',
+    'Iterate over every element in the array and add it to your `sum`.',
+    'Calculate and return the average by dividing `sum` by the array length.'
+  ],
   
   learningGoals: ['Accumulate sum and divide by count'],
   statement: 'Given a non-empty array of integers `numbers`, calculate and return the average of its elements. Perform integer division (truncate towards zero).',

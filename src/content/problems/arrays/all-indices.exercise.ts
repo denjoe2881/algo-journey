@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 418,
   mode: 'function_implementation',
+  hints: [
+    'Initialize an empty list (e.g. `ArrayList`) to store the resulting indices.',
+    'Use a `for` loop to iterate over the input array from start to end.',
+    'Inside the loop, if the current element matches the `target`, add the current index `i` to the list.',
+    'Return the populated list after the loop concludes.'
+  ],
   
   learningGoals: ['Accumulate results into a collection'],
   statement: 'Given an array of integers `numbers` and an integer `target`, return a list containing every index where `target` appears. The resulting list should be sorted in ascending order.',

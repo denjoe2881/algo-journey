@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'contains-duplicate', version: 1, title: 'Contains Duplicate',
   summary: 'Check if any value appears at least twice in the array.', topic: 'arrays', difficulty: 'easy',
   tags: ['hash-set'], estimatedMinutes: 10, order: 1000, mode: 'function_implementation',
+  hints: [
+    'You could use nested loops to compare every pair of elements, but this is slow (O(N^2)).',
+    'A better approach is to use a `HashSet` to keep track of elements you have already seen.',
+    'Iterate through the array. For each element, check if it is already in the `HashSet`.',
+    'If it is, you found a duplicate! Return `true`. Otherwise, add it to the set and continue. Return `false` if the loop finishes.'
+  ],
   learningGoals: ['Use a HashSet for O(n) lookup', 'Detect duplicates'],
   statement: 'Given an integer array `arr`, return `true` if any value appears at least twice, and `false` if every element is distinct.',
   constraints: ['1 ≤ arr.length ≤ 10000'],

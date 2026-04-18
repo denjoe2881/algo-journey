@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Linked List Cycle',
   summary: 'Detect if a linked list has a cycle using Floyd\'s algorithm.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'medium',
   tags: ['linked-list', 'floyd-cycle', 'slow-fast-pointer', 'cse201'],
   estimatedMinutes: 20,
   order: 465,
   mode: 'function_implementation',
+  hints: [
+    "Use Floyd's Cycle-Finding Algorithm (Tortoise and Hare).",
+    'Initialize two pointers, `slow` and `fast`, both starting at the `head`.',
+    'Move `slow` one step at a time (`slow = slow.next`) and `fast` two steps at a time (`fast = fast.next.next`).',
+    'If there is a cycle, `fast` will eventually catch up to `slow`. If `fast` or `fast.next` becomes `null`, there is no cycle.'
+  ],
 
   learningGoals: ['Floyd\'s Cycle Detection (tortoise and hare)', 'Slow & fast pointer technique'],
   prerequisites: ['Linked list traversal'],

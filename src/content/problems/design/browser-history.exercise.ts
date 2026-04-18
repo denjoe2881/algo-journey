@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 30,
   order: 442,
   mode: 'class_implementation',
+  hints: [
+    'You can use two Stacks (one for `back` and one for `forward`), or a Doubly-Linked List, or simply an `ArrayList` with an index pointer.',
+    'If using an `ArrayList` and an index pointer `curr`: `visit` adds the url at `curr + 1` and truncates the rest of the list. Then `curr++`.',
+    '`back` moves `curr` back by `steps` but not below 0.',
+    '`forward` moves `curr` forward by `steps` but not past the size of the list minus 1.'
+  ],
 
   learningGoals: ['Manage complex state changes with back, forward, and overwrite semantics', 'Use arrays or stacks to track browser history'],
   statement: `You have a browser of one tab where you start on the \`homepage\` and you can visit another \`url\`, get back in the history number of \`steps\` or move forward in the history number of \`steps\`.

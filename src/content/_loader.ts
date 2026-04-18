@@ -33,6 +33,7 @@ export interface ExerciseDefinition {
   order?: number;
   mode: ExerciseMode;
 
+  hints?: string[];
   learningGoals?: string[];
   prerequisites?: string[];
   statement: string;
@@ -216,6 +217,7 @@ function definitionToExercise(
     tags: [...def.tags],
     estimatedMinutes: def.estimatedMinutes,
     order: def.order,
+    hints: def.hints,
     learningGoals: def.learningGoals,
     prerequisites: def.prerequisites,
     mode: def.mode,

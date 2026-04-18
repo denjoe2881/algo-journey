@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 422,
   mode: 'function_implementation',
+  hints: [
+    'Remember to adjust `k` in case it is larger than the array length: `k = k % length`.',
+    'A brute force approach (rotating step-by-step) is too slow. Creating a new array takes O(N) extra space.',
+    'To do it in-place (O(1) space), first, reverse the entire array.',
+    'Then, reverse the first `k` elements.',
+    'Finally, reverse the remaining `length - k` elements.'
+  ],
   
   learningGoals: ['Understand modulo arithmetic for array bounds', 'Copy slices of an array'],
   statement: 'Given an array of integers `numbers`, an integer `k`, and a string `direction` ("left" or "right"), return a new array that is the original array rotated by `k` positions in the specified direction.',

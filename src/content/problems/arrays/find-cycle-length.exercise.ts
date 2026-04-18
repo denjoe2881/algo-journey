@@ -11,6 +11,13 @@ export default defineExercise({
   estimatedMinutes: 25,
   order: 427,
   mode: 'function_implementation',
+  hints: [
+    'Use a `Map` or an array to keep track of visited indices and the "step" you visited them at.',
+    'Start at the given index `startIndex` and step = 0.',
+    'Traverse the array by following the values as next indices. Mark each index with the current step.',
+    'If you encounter an index you have already visited, a cycle is detected! The length is `current_step - visited_step`.',
+    'If you go out of bounds before seeing a cycle, there is no cycle (return -1).'
+  ],
   
   learningGoals: ["Understand Floyd's cycle-finding algorithm", 'Detect cycle length dynamically'],
   statement: `Given an array of integers \`arr\`, you can interpret it as a functional graph where \`arr[i]\` points to the next index to visit. 

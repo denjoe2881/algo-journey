@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 425,
   mode: 'function_implementation',
+  hints: [
+    'There is a clever math trick for this! Since the array contains distinct numbers from `0` to `n` with one missing, you can calculate the expected sum of `0` to `n`.',
+    'The formula for the sum of the first `n` numbers is `n * (n + 1) / 2`.',
+    'Then, loop through the array to find the actual sum of its elements.',
+    'The missing number is simply `expected_sum - actual_sum`.'
+  ],
   
   learningGoals: ['Understand arithmetic sum', 'Deduce missing elements optimally'],
   statement: 'Given an array of integers `numbers` containing `n` distinct numbers taken from the range `0` to `n` (inclusive), return the single number that is missing from the array.',

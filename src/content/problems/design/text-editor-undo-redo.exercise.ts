@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 30,
   order: 448,
   mode: 'class_implementation',
+  hints: [
+    'A `StringBuilder` is good for manipulating the current text.',
+    'Use an `undoStack` and a `redoStack` storing Strings (representing the text states).',
+    'When typing or deleting, push the current text state to `undoStack` and clear `redoStack` BEFORE you modify the text.',
+    'When undoing, push the current text to `redoStack` and update your text to the state popped from `undoStack`.'
+  ],
 
   learningGoals: ['Understand the Command Pattern or State Snapshot pattern', 'Manage parallel stacks for undo and redo history'],
   statement: `Design a simple text editor that supports adding text, deleting text, and undo/redo operations.

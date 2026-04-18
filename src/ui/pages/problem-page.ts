@@ -171,15 +171,16 @@ function createStatementPanel(exercise: Exercise): HTMLElement {
   });
 
   // Tabs
-  const tabs = el('div', { className: 'tabs' });
-  const descTab = el('div', { className: 'tab tab--active', text: 'Description', data: { tab: 'description' } });
-  tabs.appendChild(descTab);
+  const tabs = el('div', { className: 'tabs', id: 'left-tabs' });
+  const descTab = el('div', { className: 'tab tab--active', text: 'Description', data: { leftTab: 'description' } });
+  const hintTab = el('div', { className: 'tab', text: 'Hints', data: { leftTab: 'hints' } });
+  tabs.append(descTab, hintTab);
 
   // Body
-  const body = el('div', { className: 'panel__body' });
+  const body = el('div', { className: 'panel__body', id: 'left-body' });
 
-  // Statement
-  const statement = el('div', { className: 'problem-statement' });
+  // Statement Panel
+  const statement = el('div', { className: 'problem-statement tab-panel', id: 'panel-description', attrs: { style: 'display: block;' } });
   const mdContent = el('div', { className: 'markdown-content', html: formatStatement(exercise.statement) });
   statement.appendChild(mdContent);
 
@@ -226,7 +227,36 @@ function createStatementPanel(exercise: Exercise): HTMLElement {
     statement.appendChild(goalsList);
   }
 
-  body.appendChild(statement);
+  const hintsPanel = el('div', { className: 'problem-hints tab-panel', id: 'panel-hints', attrs: { style: 'display: none; padding: var(--space-4) 0;' } });
+  if (exercise.hints && exercise.hints.length > 0) {
+    const hintsList = el('ol', { className: 'hints-list', attrs: { style: 'padding-left: var(--space-4); margin: 0; color: var(--color-text-secondary);' } });
+    for (let i = 0; i < exercise.hints.length; i++) {
+        hintsList.appendChild(el('li', {
+            className: 'hint-item',
+            attrs: { style: 'margin-bottom: var(--space-3); line-height: 1.6;' },
+            html: formatStatement(exercise.hints[i]!, false)
+        }));
+    }
+    hintsPanel.appendChild(hintsList);
+  } else {
+    hintsPanel.appendChild(el('div', { className: 'empty-state', text: 'No hints available for this problem.' }));
+  }
+
+  body.append(statement, hintsPanel);
+
+  // Tab switching logic for left panel
+  const leftMatchTabs = [descTab, hintTab];
+  const leftMatchPanels = [statement, hintsPanel];
+
+  leftMatchTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      leftMatchTabs.forEach(t => t.classList.remove('tab--active'));
+      tab.classList.add('tab--active');
+      leftMatchPanels.forEach(p => p.style.display = 'none');
+      leftMatchPanels[index]!.style.display = 'block';
+    });
+  });
+
   panel.appendChild(header);
   panel.appendChild(tabs);
   panel.appendChild(body);

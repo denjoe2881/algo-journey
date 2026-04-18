@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 443,
   mode: 'class_implementation',
+  hints: [
+    'Use an array of Strings (size `n + 1`) to store the values.',
+    'Keep track of a `ptr` initialized to 1.',
+    'When `insert(idKey, value)` is called, store the `value` at `array[idKey]`.',
+    'Then, while `ptr <= n` and `array[ptr]` is not null, add `array[ptr]` to your result list and increment `ptr`!'
+  ],
 
   learningGoals: ['Understand states and pointer manipulation', 'Buffering out-of-order data streams'],
   statement: `There is a stream of \`n\` \`(idKey, value)\` pairs arriving in an arbitrary order, where \`idKey\` is an integer between \`1\` and \`n\` and \`value\` is a string. No two pairs have the same \`idKey\`.

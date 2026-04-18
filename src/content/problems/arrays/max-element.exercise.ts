@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'max-element', version: 1, title: 'Maximum Element',
   summary: 'Find the maximum element in an array.', topic: 'arrays', difficulty: 'easy',
   tags: ['linear-search', 'extreme', 'cse201'], estimatedMinutes: 10, order: 404, mode: 'function_implementation',
+  hints: [
+    'Initialize a variable (e.g., `max_val`) and assume the first element `numbers[0]` is the maximum.',
+    'Loop from index 1 to the end of the array.',
+    'If the current element is larger than `max_val`, update `max_val`.',
+    'Return `max_val` at the end of the loop.'
+  ],
   learningGoals: ['Track running maximum while iterating'],
   statement: 'Given an integer array `arr`, return the maximum element.',
   constraints: ['The array has at least one element.'],

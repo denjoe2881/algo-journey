@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 428,
   mode: 'function_implementation',
+  hints: [
+    'Use two pointers `i` and `j`, starting at index 0 for both arrays.',
+    'Compare the elements at the pointers. If they are equal, add to the result and move both pointers.',
+    'If `arr1[i] < arr2[j]`, move `i` forward. If `arr1[i] > arr2[j]`, move `j` forward.',
+    'Stop when either pointer reaches the end of its respective array.'
+  ],
   
   learningGoals: ['Traverse two arrays simultaneously', 'Maintain sorted order while finding overlaps'],
   statement: 'Given two sorted arrays of integers `left` and `right`, return a new sorted array containing their intersection (common elements). Keep duplicates: if an element appears multiple times in both arrays, it should appear `min(countInLeft, countInRight)` times in the output.',

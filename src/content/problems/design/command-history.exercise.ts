@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 449,
   mode: 'class_implementation',
+  hints: [
+    'You can easily solve this using two Stacks: `undoStack` and `redoStack`.',
+    'When executing a new command, push it to `undoStack` and clear the `redoStack`.',
+    'When undoing, pop from `undoStack` and push it to `redoStack`.',
+    'When redoing, pop from `redoStack` and push it back to `undoStack`.'
+  ],
 
   learningGoals: ['Implement the Command Design Pattern with concrete operations', 'Use stacks or lists to track history bounds for undo and redo operations'],
   statement: `You are simulating a command-line interface that modifies a single integer \`value\` that starts at \`0\`.

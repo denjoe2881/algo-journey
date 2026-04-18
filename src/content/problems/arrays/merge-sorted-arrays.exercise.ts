@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'merge-sorted-arrays', version: 1, title: 'Merge Sorted Arrays',
   summary: 'Merge two sorted arrays into a single sorted array.', topic: 'arrays', difficulty: 'medium',
   tags: ['two-pointers', 'merge', 'cse201'], estimatedMinutes: 15, order: 424, mode: 'function_implementation',
+  hints: [
+    'Use two pointers, `i` for the `left` array and `j` for the `right` array, both starting at 0.',
+    'Create a result array of size `left.length + right.length`. Keep a pointer `k` for it.',
+    'While both `i` and `j` are within bounds, compare `left[i]` and `right[j]`. Add the smaller one to the result array and increment its pointer.',
+    'If one array is exhausted, use a `while` loop to copy the remaining elements from the other array into the result.'
+  ],
   learningGoals: ['Two-pointer merge technique', 'Build result array'],
   statement: 'Given two sorted integer arrays `a` and `b`, merge them into a single sorted array and return it.',
   constraints: ['Both arrays are sorted in ascending order.', 'Either array may be empty.'],

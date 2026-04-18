@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 429,
   mode: 'function_implementation',
+  hints: [
+    'Use the sliding window technique to avoid calculating the sum from scratch for every subarray.',
+    'First, iteratively compute the sum of the first `k` elements. This is your initial window sum and also your current `max_sum`.',
+    'Loop from index `k` to the end. For each step, slide the window by adding the new element `numbers[i]` and subtracting the element that left the window `numbers[i-k]`.',
+    'Update `max_sum` if the new window sum is larger.'
+  ],
   
   learningGoals: ['Understand the sliding window technique', 'Optimize sum recalculations'],
   statement: 'Given an array of integers `numbers` and an integer `k`, return the maximum sum of any contiguous subarray of exactly `k` elements.',

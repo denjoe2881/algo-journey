@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 426,
   mode: 'function_implementation',
+  hints: [
+    'Since the array is sorted, you can use the two-pointer technique to solve this optimally in O(N).',
+    'Place one pointer `left` at the start (index 0) and one pointer `right` at the end (`length - 1`).',
+    'Calculate `sum = numbers[left] + numbers[right]`.',
+    'If `sum == target`, you found the pair! If `sum < target`, increment `left`. If `sum > target`, decrement `right`.'
+  ],
   
   learningGoals: ['Use the two-pointer technique to find pairs efficiently', 'Take advantage of sorted data'],
   statement: 'Given a sorted array of integers `numbers` and a `target` sum, find two distinct indices `[i, j]` such that `numbers[i] + numbers[j] == target` (with `i < j`). Return `[-1, -1]` if no such pair exists.',

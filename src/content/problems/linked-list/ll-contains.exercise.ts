@@ -6,12 +6,18 @@ export default defineExercise({
   version: 1,
   title: 'Linked List Contains',
   summary: 'Check if a linked list contains a given target value.',
-  topic: 'linked-lists',
+  topic: 'linked-list',
   difficulty: 'easy',
   tags: ['linked-list', 'traversal', 'cse201'],
   estimatedMinutes: 10,
   order: 460,
   mode: 'function_implementation',
+  hints: [
+    'Initialize a pointer `current` at the `head` of the list.',
+    'Use a `while` loop to traverse the list as long as `current` is not null.',
+    'If `current.val == target`, return `true`.',
+    'Move to the next node using `current = current.next`. If the loop finishes, return `false`.'
+  ],
 
   learningGoals: ['Linked list traversal', 'Node pointer navigation'],
   prerequisites: ['Linear search'],

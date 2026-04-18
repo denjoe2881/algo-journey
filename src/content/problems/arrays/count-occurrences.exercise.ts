@@ -3,6 +3,12 @@ export default defineExercise({
   id: 'count-occurrences', version: 1, title: 'Count Occurrences',
   summary: 'Count how many times a target appears in an array.', topic: 'arrays', difficulty: 'easy',
   tags: ['linear-search', 'counting', 'cse201'], estimatedMinutes: 10, order: 410, mode: 'function_implementation',
+  hints: [
+    'Declare a `count` variable and set it to 0 to keep track of occurrences.',
+    'Use a loop to iterate through the array.',
+    'Every time you see an element matching the target, increment the `count`.',
+    'Return the `count` at the end of the loop.'
+  ],
   learningGoals: ['Count matching elements during iteration'],
   statement: 'Given an integer array `arr` and a `target`, return the number of times `target` appears in `arr`.',
   constraints: [],

@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 401,
   mode: 'function_implementation',
+  hints: [
+    'Use a `for` loop to check each element starting from index 0.',
+    'If you find an element `numbers[i] == target`, immediately return the index `i`.',
+    'If the loop finishes without finding the target, return `-1`.'
+  ],
 
   learningGoals: ['Iterate through an array', 'Use comparison to find a match'],
   statement: 'Given an integer array `numbers` and a `target` value, return the first index where `target` appears. If it does not appear, return `-1`.',

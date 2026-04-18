@@ -17,7 +17,7 @@ export type Topic =
   | 'math'
   | 'design'
   | 'collections'
-  | 'linked-lists';
+  | 'linked-list';
 
 // ── Helper Classes (platform-injected, e.g. ListNode, TreeNode) ──
 export interface HelperClass {
@@ -39,6 +39,7 @@ export interface Exercise {
   tags: string[];
   estimatedMinutes: number;
   order?: number;
+  hints?: string[];
   learningGoals?: string[];
   prerequisites?: string[];
   mode: ExerciseMode;

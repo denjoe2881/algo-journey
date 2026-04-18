@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 20,
   order: 445,
   mode: 'class_implementation',
+  hints: [
+    'Use two tracking maps (either `HashMap` or pre-allocated arrays if constraints are small).',
+    'Map 1: `elementFrequency` maps an element to its frequency.',
+    'Map 2: `frequencyCount` maps a frequency to how many elements currently have that frequency.',
+    'When adding/deleting an element, carefully update its count in the first map AND update the counts in the second map.'
+  ],
 
   learningGoals: ['Maintain bi-directional tracking of states', 'Use multiple hash maps or arrays to answer queries in O(1) time'],
   statement: `Design a data structure that keeps track of the values in it and answers some queries regarding their frequencies.

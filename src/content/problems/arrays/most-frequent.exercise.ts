@@ -11,6 +11,11 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 413,
   mode: 'function_implementation',
+  hints: [
+    'Use a `HashMap<Integer, Integer>` to map each element to its occurrence count in the array.',
+    'Loop through the array. For each number, increment its count in the map using `map.put(num, map.getOrDefault(num, 0) + 1)`.',
+    'You can keep track of the `most_frequent` element and its `max_count` as you build the map, or iterate over `map.entrySet()` afterwards.'
+  ],
   
   learningGoals: ['Use a map to count frequencies', 'Handle tie breakers'],
   statement: 'Given a non-empty array of integers `numbers`, find and return the value that appears most frequently in the array. If there is a tie between multiple values, return the smallest value among the tied winners.',

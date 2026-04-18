@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 15,
   order: 441,
   mode: 'class_implementation',
+  hints: [
+    'You can simply use three integer variables: `big`, `medium`, and `small`.',
+    'Initialize them with the given values in the constructor.',
+    'In `addCar(carType)`, check the `carType` argument.',
+    'If the corresponding capacity is limit `> 0`, decrement it and return `true`. Otherwise, return `false`.'
+  ],
 
   learningGoals: ['Model limited resources in an OOP design', 'Work with class state variables to track available slots'],
   statement: `Design a parking system for a parking lot. The parking lot has three kinds of parking spaces: big, medium, and small, with a fixed number of slots for each size.

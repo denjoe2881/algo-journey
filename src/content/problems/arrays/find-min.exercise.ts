@@ -11,6 +11,12 @@ export default defineExercise({
   estimatedMinutes: 10,
   order: 405,
   mode: 'function_implementation',
+  hints: [
+    'Initialize a variable `min_val` assuming the first element `numbers[0]` is the minimum.',
+    'Loop from index 1 to the end of the array.',
+    'If you find an element smaller than your assumed `min_val`, update `min_val`.',
+    'Return `min_val` at the end.'
+  ],
   
   learningGoals: ['Track running minimum while iterating'],
   statement: 'Given an array of integers `numbers`, find and return the minimum value. The array is guaranteed to be non-empty.',
