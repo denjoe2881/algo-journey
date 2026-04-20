@@ -6,7 +6,7 @@
    Java compiler/runner has not been connected yet.
 
    To implement:
-     → See docs/Architecture.md § "Execution Pipeline"
+     → See docs/architecture.md § "Execution Pipeline"
      → Replace this with a Worker that runs teavm-javac
    ═══════════════════════════════════════════════════════════ */
 

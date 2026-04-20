@@ -21,6 +21,7 @@ npm run lint:exercises
 - **`update_order.ts`**: Tự động đánh lại số thứ tự (`order`) cho một danh sách các bài tập cố định (như mảng Arrays) dựa trên mảng config có sẵn trong code (bắt đầu từ số 401).
 - **`generate-pc-judge.ts`**: Chuyển đổi các bài tập `.exercise.ts` trên platform thành các package Java độc lập (PC Judge) giúp giảng viên chấm điểm tự động (chạy qua CLI) mà không cần browser. Xem chi tiết tại [Hướng dẫn PC Judge](./pc-judge-guide.md).
 - **`verify-pc-judge.ts`**: Công cụ chạy nghiệm thu tất cả bài tập đã xuất ra bằng `generate-pc-judge.ts`. Tự động scan kết quả test lỗi qua file JSON khi chạy bằng Code Khởi tạo (Starter Code) hoặc Mã mẫu (Reference Solution).
+- **`coverage-refs.ts`**: Đo code coverage (line, branch, method) của bộ testcases đối với đáp án mẫu sử dụng JaCoCo. Tự động tải JaCoCo JARs trong lần chạy đầu tiên. Xuất báo cáo tổng hợp tại `out/pc-judge/4_report_coverage.json`. Xem chi tiết tại [Hướng dẫn PC Judge](./pc-judge-guide.md).
 - **`lint_exercises.ts`**: Kiểm tra tự động các lỗi cú pháp phổ biến trong tất cả file `.exercise.ts` và `.gen.ts`. Nên chạy script này mỗi khi thêm bài tập mới để tránh lỗi runtime trên trình duyệt.
 
   Chạy nhanh qua npm:

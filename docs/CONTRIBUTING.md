@@ -27,6 +27,11 @@ Open `http://localhost:5173/` in your browser.
 |---|---|
 | `npm run dev` | Start Vite dev server with HMR |
 | `npm run build` | Production build to `dist/` |
+| `npm run lint:exercises` | Lint all `.exercise.ts` and `.gen.ts` files |
+| `npm run pc-judge <slug>` | Generate PC Judge package for specific exercise(s) |
+| `npm run pc-judge:all` | Generate PC Judge packages for all 84 exercises |
+| `npm run pc-judge:verify` | Verify reference solutions (run-starter, verify-refs, clean) |
+| `npm run pc-judge:coverage` | Measure JaCoCo code coverage per exercise |
 | `npx tsc --noEmit` | TypeScript type check (strict mode) |
 
 ---
@@ -177,7 +182,7 @@ That's it! Because we use Vite's `import.meta.glob` via `src/content/_loader.ts`
 
 ### Available Topics
 
-`arrays`, `strings`, `loops`, `conditionals`, `recursion`, `searching`, `sorting`, `math`, `classes`, `collections`
+`arrays`, `strings`, `loops`, `conditionals`, `recursion`, `searching`, `sorting`, `math`, `design`, `linked-list`, `mono-stack`
 
 ### Difficulty Levels
 
@@ -244,6 +249,39 @@ Before submitting a PR:
 
 For deeper context, see:
 
-- [Architecture.md](./Architecture.md) — System design and module overview
-- [Tasks.md](./Tasks.md) — Product roadmap and task breakdown
-- [ExerciseSchema.md](./ExerciseSchema.md) — Exercise format specification
+- [architecture.md](./architecture.md) — System design and module overview
+- [tasks.md](./tasks.md) — Product roadmap and task breakdown
+- [exercise-schema.md](./exercise-schema.md) — Exercise format specification
+- [oop-design-patterns.md](./oop-design-patterns.md) — Design doc for OOP exercises
+
+---
+
+## PC Judge & Quality Assurance
+
+For instructors who need offline grading or want to verify exercise quality:
+
+### Generate grading packages
+```bash
+npm run pc-judge lru-cache          # Single exercise
+npm run pc-judge:all                 # All 84 exercises
+```
+
+Each package in `out/pc-judge/<slug>/` is a self-contained folder that grades student submissions with just JDK:
+```bash
+javac Runner.java StudentFile.java
+java Runner
+```
+
+### Verify reference solutions
+```bash
+npm run pc-judge:verify verify-refs  # All exercises
+npm run pc-judge:verify verify-refs coffee-decorator;lru-cache  # Specific
+```
+
+### Measure test coverage
+```bash
+npm run pc-judge:coverage            # All exercises
+npm run pc-judge:coverage coffee-decorator  # Specific
+```
+
+See [scripts/pc-judge-guide.md](../scripts/pc-judge-guide.md) for detailed usage.

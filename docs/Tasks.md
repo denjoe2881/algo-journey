@@ -1,8 +1,8 @@
-# Tasks.md
+# tasks.md
 ## algo-journey — Product-aligned roadmap and task breakdown
 
-Version: 1.2  
-Status: M0 partial · M1 complete · M2 complete · M3 in progress · M4 pending  
+Version: 2.0  
+Status: M0 partial · M1 complete · M2 complete · M3 complete · M4 partial · M5 complete  
 Repository: `algo-journey`
 
 ---
@@ -73,11 +73,14 @@ A learner can open one problem, write code, run it, and see results.
 ### M2 — Problem catalog and local progress ✅ *Complete*
 A learner can browse multiple problems by topic/difficulty and see local progress.
 
-### M3 — Stable exercise engine 🔄 *In Progress*
-Visible/hidden tests, class/function modes, better result mapping.
+### M3 — Stable exercise engine ✅ *Complete*
+Visible/hidden tests, class/function modes, javaGenerator stress tests, 84 exercises across 11 topics.
 
-### M4 — Contributor-ready open-source baseline 🔲 *Pending*
-Documentation, content authoring workflow, extension points, quality baseline.
+### M4 — Contributor-ready open-source baseline 🔄 *Partial*
+README, CONTRIBUTING, docs partially updated. Content authoring guide embedded in CONTRIBUTING.md.
+
+### M5 — PC Judge & Quality Assurance ✅ *Complete*
+Offline grading packages, automated reference verification, JaCoCo code coverage measurement.
 
 ---
 
@@ -285,9 +288,10 @@ Make the engine reliable enough for broader content authoring.
 
 ## Tasks
 
-### ENGINE-003 — Support class-based exercises
+### ENGINE-003 — Support class-based exercises ✅
 Owner: Exercise Engine Agent  
-Output: object construction and method-call harness flow
+Output: object construction and method-call harness flow  
+*Done: 25 class_implementation exercises authored (OOP + Design Patterns), operations-based testing fully working*
 
 ### ENGINE-004 — Support output-based exercises
 Owner: Exercise Engine Agent  
@@ -311,9 +315,10 @@ Owner: Exercise Engine Agent
 Output: enforced worker termination and capped payload sizes
 *Done: Adjusted JavaGenerator array sizes (O(N^2) bypass limits <30k), RunWorker fully handles timeouts seamlessly.*
 
-### CONTENT-004 — Author 30+ V1 exercises
+### CONTENT-004 — Author 30+ V1 exercises ✅
 Owner: Content Agent  
-Output: broader exercise set across topics and difficulties
+Output: broader exercise set across topics and difficulties  
+*Done: 84 exercises across 11 topics (arrays, design, linked-list, mono-stack, strings, math, loops, recursion, sorting, searching, conditionals)*
 
 ### QA-004 — Exercise compatibility matrix
 Owner: QA Agent  
@@ -341,29 +346,77 @@ Make the project easy to understand, extend, and contribute to.
 
 ## Tasks
 
-### DOCS-001 — Update README to landing-page style
+### DOCS-001 — Update README to landing-page style ✅
 Owner: Docs Agent  
-Output: short, sharp repository homepage text
+Output: short, sharp repository homepage text  
+*Done: README rewritten with student/educator sections, curriculum table, PC Judge/Coverage pipeline*
 
-### DOCS-002 — Write contributor setup guide
+### DOCS-002 — Write contributor setup guide ✅
 Owner: Docs Agent  
-Output: local setup and package overview guide
+Output: local setup and package overview guide  
+*Done: CONTRIBUTING.md with file-per-problem architecture, step-by-step guide, CSS tokens, npm scripts*
 
-### DOCS-003 — Write content authoring guide
+### DOCS-003 — Write content authoring guide ✅
 Owner: Docs Agent  
-Output: how to add problems with the schema
+Output: how to add problems with the schema  
+*Done: Embedded in CONTRIBUTING.md §"Adding a New Exercise" + OOP Design Pattern Problems.md*
 
 ### ARCH-002 — Finalize package contracts
 Owner: Product Architecture Agent  
 Output: stable cross-package interface summary
 
-### CONTENT-005 — Add example packs by topic
+### CONTENT-005 — Add example packs by topic ✅
 Owner: Content Agent  
-Output: starter problem packs for arrays, strings, recursion, OOP
+Output: starter problem packs for arrays, strings, recursion, OOP  
+*Done: 84 exercises covering arrays(33), design(25), linked-list(6), mono-stack(6), + 14 across other topics*
 
 ### QA-005 — Release readiness checklist
 Owner: QA Agent  
 Output: ship checklist for first public OSS version
+
+---
+
+# Phase M5 — PC Judge & Quality Assurance
+
+## Goal
+Provide instructors with a complete offline grading toolkit and automated quality control pipeline.
+
+## Deliverables
+
+- PC Judge packages generated from all exercises
+- Automated reference solution verification
+- JaCoCo code coverage measurement
+- Suspicious test detection
+- Comprehensive JSON reports
+
+## Exit criteria
+
+- all 84 exercises generate valid PC Judge packages
+- all reference solutions pass 100% of their own tests
+- coverage reports identify exercises with low branch coverage
+- instructor can grade student submissions offline with just JDK
+
+## Tasks
+
+### PCJUDGE-001 — Generate PC Judge packages ✅
+Owner: Content Agent  
+Output: `npm run pc-judge:all` generates 84 standalone grading folders  
+*Done: scripts/generate-pc-judge.ts converts .exercise.ts + .gen.ts + .solution.java → Runner.java + grade.bat/sh*
+
+### PCJUDGE-002 — Reference solution verification ✅
+Owner: QA Agent  
+Output: `npm run pc-judge:verify verify-refs` verifies all references pass 100%  
+*Done: scripts/verify-pc-judge.ts with multi-sample trace, suspicious test detection, JSON reports*
+
+### PCJUDGE-003 — JaCoCo coverage measurement ✅
+Owner: QA Agent  
+Output: `npm run pc-judge:coverage` measures line/branch/method coverage per exercise  
+*Done: scripts/coverage-refs.ts auto-downloads JaCoCo 0.8.13, generates 4_report_coverage.json*
+
+### PCJUDGE-004 — Documentation ✅
+Owner: Docs Agent  
+Output: scripts/pc-judge-guide.md with full usage instructions  
+*Done: Detailed guide covering generate, verify, coverage with example output*
 
 ---
 

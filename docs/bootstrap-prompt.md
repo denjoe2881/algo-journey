@@ -195,10 +195,10 @@ project-root/
 │   └── wasm/                     # WASM binaries (tree-sitter, compiler)
 │
 └── docs/                         # Project documentation
-    ├── Architecture.md
-    ├── ExerciseSchema.md
-    ├── Tasks.md
-    └── Agent_Project_Bootstrap_Prompt.md
+    ├── architecture.md
+    ├── exercise-schema.md
+    ├── tasks.md
+    └── bootstrap-prompt.md
 ```
 
 ---

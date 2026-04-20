@@ -1,6 +1,8 @@
-# OOP and Design Pattern Problems (CSE202)
+# OOP and Design Pattern Problems (CSE203)
 
 > Tài liệu thiết kế bài tập thực hành OOP/Design Pattern trên nền tảng Algo Journey.
+>
+> **Trạng thái: ✅ Tất cả 10 bài đã được implement và nghiệm thu** — xem chi tiết tại `src/content/problems/design/`
 
 ---
 
@@ -18,7 +20,7 @@ Mỗi bài tập gồm **3 files** trong `src/content/problems/design/`:
 
 ### Tags & Metadata
 
-- **Tag**: `cse202` (thuộc khóa OOP and Design Pattern, KHÔNG phải `cse201`)
+- **Tag**: `cse203` (thuộc khóa OOP and Design Pattern)
 - **Topic**: `design`
 - **Mode**: `class_implementation` (harness dùng operations-based testing)
 

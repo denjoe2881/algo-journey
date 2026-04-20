@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const searchDir = '../src/content/problems';
-const outputCsv = '../docs/problems_catalog.csv';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const searchDir = path.resolve(__dirname, '../src/content/problems');
+const outputCsv = path.resolve(__dirname, '../docs/problems_catalog.csv');
 
 function getStats(dir) {
     let results = [];

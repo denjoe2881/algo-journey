@@ -38,10 +38,16 @@ max-sum-subarray-k,"Maximum Sum of Subarray of Size K",429,sliding-window;cse201
 shortest-subarray-sum,"Shortest Subarray With Sum ≥ Target",430,sliding-window;two-pointers;cse201
 build-prefix-sum,"Build Prefix Sum",431,prefix-sum;cse201
 range-sum-queries,"Range Sum Queries",432,prefix-sum;cse201
+nearest-greater-element,"Nearest Greater Element",433,mono-stack;stack;cse201
 binary-search,"Binary Search",433,divide-and-conquer;cse201
+stock-span,"Stock Span",434,mono-stack;stack;cse201
+daily-temperatures,"Daily Temperatures",435,mono-stack;stack;cse201
 simple-counter,"Simple Counter",436,constructor;state;cse201
+remove-k-digits,"Remove K Digits",436,mono-stack;greedy;string;cse201
 min-stack,"Min Stack",437,stack;design;cse201
+largest-rectangle-histogram,"Largest Rectangle in Histogram",437,mono-stack;stack;cse201
 queue-using-stacks,"Implement Queue using Stacks",438,stack;design;queue;cse201
+sum-subarray-minimums,"Sum of Subarray Minimums",438,mono-stack;stack;math;cse201
 moving-average,"Moving Average from Data Stream",439,queue;design;sliding-window;cse201
 recent-counter,"Number of Recent Calls",440,queue;design;data-stream;cse201
 parking-system,"Design Parking System",441,design;simulation;cse201
@@ -54,6 +60,16 @@ lru-cache,"LRU Cache",447,hash-table;linked-list;design;doubly-linked-list;cse20
 text-editor-undo-redo,"Text Editor with Undo and Redo",448,stack;design;command-pattern;cse201
 command-history,"Command History Simulator",449,stack;design;command-pattern;cse201
 shopping-cart-undo-redo,"Shopping Cart with Undo and Redo",450,hash-table;stack;design;command-pattern;cse201
+payment-method,"Payment Method - Strategy Pattern",451,design;strategy-pattern;polymorphism;cse203
+shape-drawing,"Shape Drawing - Polymorphism",452,design;polymorphism;inheritance;cse203
+notification-observer,"Notification System - Observer Pattern",453,design;observer-pattern;events;cse203
+text-editor-command,"Undo/Redo Text Editor - Command Pattern",454,design;command-pattern;stack;cse203
+vehicle-factory,"Vehicle Factory - Factory Method",455,design;factory-pattern;polymorphism;cse203
+coffee-decorator,"Coffee Order - Decorator Pattern",456,design;decorator-pattern;composition;cse203
+game-character-state,"Game Character - State Pattern",457,design;state-pattern;polymorphism;cse203
+report-template-method,"Report Exporter - Template Method",458,design;template-method;inheritance;cse203
+student-grading-strategy,"Student Grading - Strategy Pattern",459,design;strategy-pattern;polymorphism;cse203
+file-reader-adapter,"File Reader Adapter - Adapter Pattern",460,design;adapter-pattern;polymorphism;cse203
 ll-contains,"Linked List Contains",460,linked-list;traversal;cse201
 ll-get-nth,"Get Nth Node",461,linked-list;traversal;index;cse201
 ll-reverse,"Reverse Linked List",462,linked-list;pointer-manipulation;cse201
@@ -67,9 +83,3 @@ gcd,"Greatest Common Divisor",1000,euclidean
 is-prime,"Is Prime",1000,loop;optimization
 fibonacci,"Fibonacci Number",1000,dynamic-programming
 selection-sort,"Selection Sort",1000,in-place;cse201
-nearest-greater-element,"Nearest Greater Element",433,mono-stack;stack;cse201
-stock-span,"Stock Span",434,mono-stack;stack;cse201
-daily-temperatures,"Daily Temperatures",435,mono-stack;stack;cse201
-remove-k-digits,"Remove K Digits",436,mono-stack;greedy;string;cse201
-largest-rectangle-histogram,"Largest Rectangle in Histogram",437,mono-stack;stack;cse201
-sum-subarray-minimums,"Sum of Subarray Minimums",438,mono-stack;stack;math;cse201

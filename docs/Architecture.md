@@ -1,15 +1,15 @@
-# Architecture.md
+# architecture.md
 ## algo-journey — Product and System Architecture
 
-Version: 1.2  
-Status: Partially implemented — M0/M1/M2 complete, M3/M4 in progress  
+Version: 2.0  
+Status: M0–M3 complete · M4 partial · M5 (PC Judge + QA) complete  
 Repository: `algo-journey`
 
 ---
 
 ## 1. Product intent
 
-`algo-journey` is an open-source browser-based practice platform for students who want to solve common programming exercises in a workflow similar to LeetCode.
+`algo-journey` is an open-source browser-based practice platform for university Java courses. Students solve programming exercises — from classic algorithms and data structures to object-oriented design and Design Patterns — in a workflow similar to LeetCode.
 
 The product promise is:
 
@@ -133,17 +133,19 @@ Problems must support at least these metadata fields:
 - `estimatedMinutes`
 - `mode`
 
-Topics are used for learning organization. Example topics:
+Topics are used for learning organization. Current topics (11):
 
-- arrays
-- strings
-- loops
-- conditionals
-- recursion
-- searching
-- sorting
-- classes and objects
-- collections
+- `arrays` (33 exercises)
+- `design` (25 — OOP, Design Patterns)
+- `linked-list` (6)
+- `mono-stack` (6)
+- `strings` (3)
+- `math` (3)
+- `loops` (2)
+- `recursion` (2)
+- `sorting` (2)
+- `searching` (1)
+- `conditionals` (1)
 
 Difficulty should be simple and learner-friendly. Example values:
 
@@ -200,8 +202,8 @@ V1 uses an open-source browser-first stack:
 - **TypeScript (strict mode)** — application source language
 - **Monaco Editor** — code editor ✅ *implemented*
 - **Tree-sitter + tree-sitter-java** — fast syntax parsing and structural checks *(planned — currently using regex-based validation)*
-- **teavm-javac** — compile Java source in the browser *(planned — currently using mock compiler)*
-- **TeaVM** — generate browser-runnable output *(planned)*
+- **teavm-javac** — compile Java source in the browser ✅ *proven (demo page works)*
+- **TeaVM** — generate browser-runnable output ✅ *proven*
 - **Web Workers** — isolate compile and run stages from the UI thread *(planned — architecture ready)*
 - **IndexedDB + localStorage** — local progress and draft persistence ✅ *implemented*
 
@@ -211,16 +213,18 @@ V1 uses an open-source browser-first stack:
 |---|---|---|
 | Vite + TypeScript | ✅ Built | Strict mode, zero errors |
 | Monaco Editor | ✅ Built | Java syntax, theme sync, auto-layout |
-| Exercise Loader | ✅ Built | JSON-based, filter by topic/difficulty/search |
+| Exercise Loader | ✅ Built | File-per-problem (.exercise.ts), filter by topic/difficulty/search |
 | Progress Store | ✅ Built | IndexedDB for progress + drafts, localStorage for recent/theme |
 | Run Orchestrator | ✅ Built | Mock compiler with structural checks |
 | Catalog UI | ✅ Built | Problem cards, filters, stats bar, animations |
-| Problem Detail UI | ✅ Built | Split layout, examples, constraints |
+| Problem Detail UI | ✅ Built | Split layout, examples, constraints, hints |
 | Result Panel | ✅ Built | Test cases, compile errors, status summary |
 | Dark/Light Theme | ✅ Built | Persisted toggle with full token system |
+| Content Library | ✅ Built | 84 exercises across 11 topics |
+| PC Judge Generator | ✅ Built | Converts exercises to standalone JDK grading packages |
+| PC Judge Verification | ✅ Built | Automated reference solution testing + suspicious test detection |
+| JaCoCo Coverage | ✅ Built | Line/branch/method coverage measurement per exercise |
 | Tree-sitter Parser | 🔲 Planned | Currently regex-based class/method validation |
-| teavm-javac Compiler | 🔲 Planned | Currently mock compiler |
-| TeaVM Runtime | 🔲 Planned | Currently mock runner |
 | Web Worker Pipeline | 🔲 Planned | Architecture designed, not yet implemented |
 
 This direction was chosen because it supports the product goals well:
@@ -422,7 +426,7 @@ Best for:
 
 ### 10.2 `function_implementation`
 
-Learner fills in one method or class method and hidden tests call it directly.
+Learner fills in one method or class method and hidden tests call it directly. Stress tests can be generated via `javaGenerator`.
 
 Best for:
 
@@ -434,7 +438,7 @@ This is the most important mode for V1.
 
 ### 10.3 `class_implementation`
 
-Learner implements a class and hidden tests instantiate objects and call methods.
+Learner implements a class and hidden tests instantiate objects and call methods. ✅ Fully supported with 25+ exercises.
 
 Best for:
 
@@ -615,72 +619,66 @@ To support outside contributors, the architecture should favor:
 
 ## 17. Current repository shape
 
-The V1 implementation uses a flat `src/` layout for development speed. Package extraction into `packages/` is planned for M4.
-
 ```text
 algo-journey/
 ├─ index.html                    # Entry point
 ├─ vite.config.ts                # Build configuration
 ├─ tsconfig.json                 # TypeScript strict config
-├─ package.json
+├─ package.json                  # 8 npm scripts (dev, build, lint, pc-judge, ...)
 │
 ├─ src/
 │  ├─ main.ts                    # Bootstrap
 │  ├─ app/                       # Config, routing
-│  │  ├─ config.ts
-│  │  └─ router.ts
 │  ├─ shared/                    # Cross-module types, events, DOM utils
-│  │  ├─ types.ts
-│  │  ├─ events.ts
-│  │  └─ dom-utils.ts
-│  ├─ content/                   # Exercise data (JSON-like TypeScript)
-│  │  ├─ catalog-data.ts
-│  │  └─ exercise-registry.ts
+│  ├─ content/                   # Exercise data
+│  │  ├─ _loader.ts              # Vite import.meta.glob auto-discovery
+│  │  ├─ _test-utils.ts          # defineTests() + seeded RNG
+│  │  └─ problems/               # File-per-problem architecture
+│  │     ├─ arrays/              # 33 exercises
+│  │     ├─ design/              # 25 exercises (OOP + Design Patterns)
+│  │     ├─ linked-list/         # 6 exercises
+│  │     ├─ mono-stack/          # 6 exercises
+│  │     ├─ strings/             # 3 exercises
+│  │     ├─ math/                # 3 exercises
+│  │     └─ ...                  # loops, recursion, sorting, etc.
 │  ├─ exercise-engine/           # Exercise loading and filtering
-│  │  └─ exercise-loader.ts
 │  ├─ runner/                    # Execution pipeline (currently mock)
-│  │  └─ mock-runner.ts
 │  ├─ progress/                  # IndexedDB persistence
-│  │  └─ progress-store.ts
 │  ├─ ui/                        # Vanilla DOM components
-│  │  ├─ app-shell.ts
-│  │  └─ pages/
-│  │     ├─ catalog-page.ts
-│  │     └─ problem-page.ts
 │  └─ styles/                    # Vanilla CSS design system
-│     ├─ reset.css
-│     ├─ variables.css
-│     ├─ app.css
-│     ├─ layout.css
-│     ├─ catalog.css
-│     └─ problem.css
 │
-└─ docs/
-   ├─ Architecture.md
-   ├─ ExerciseSchema.md
-   ├─ Tasks.md
-   └─ Agent_Project_Bootstrap_Prompt.md
+├─ scripts/                      # Instructor CLI tools
+│  ├─ generate-pc-judge.ts       # Convert exercises → PC Judge packages
+│  ├─ verify-pc-judge.ts         # Verify ref solutions + detect weak tests
+│  ├─ coverage-refs.ts           # JaCoCo code coverage per exercise
+│  ├─ lint_exercises.ts          # Lint all .exercise.ts / .gen.ts files
+│  ├─ export_catalog.ts          # Export catalog to CSV
+│  ├─ import_catalog.ts          # Import catalog from CSV
+│  ├─ update_order.ts            # Re-order exercises
+│  ├─ pc-judge-guide.md          # PC Judge detailed guide
+│  └─ README.md                  # Scripts overview
+│
+├─ docs/                          # Project documentation
+│  ├─ architecture.md             # This file
+│  ├─ exercise-schema.md          # Exercise schema specification
+│  ├─ tasks.md                    # Roadmap and task tracking
+│  ├─ CONTRIBUTING.md             # Contributor setup guide
+│  ├─ oop-design-patterns.md      # Design doc for OOP exercises
+│  ├─ teavm-javac-guide.md        # TeaVM integration guide
+│  ├─ bootstrap-prompt.md         # Reusable project template
+│  ├─ teavm-javac-demo.html       # Standalone TeaVM demo page
+│  └─ problems_catalog.csv        # Exported exercise catalog
+│
+├─ out/                           # Generated artifacts (gitignored)
+│  ├─ pc-judge/                   # PC Judge packages (84 folders)
+│  │  ├─ 1_report_starter.json    # Starter code verification report
+│  │  ├─ 3_report_ref.json        # Reference solution verification report
+│  │  ├─ 4_report_coverage.json   # JaCoCo coverage report
+│  │  └─ <slug>/                  # One folder per exercise
+│  └─ lib/jacoco/                 # JaCoCo JARs (auto-downloaded)
 ```
 
-### 17.1 Future repository shape (M4+)
 
-```text
-algo-journey/
-├─ apps/
-│  └─ web/
-├─ packages/
-│  ├─ app-core/
-│  ├─ editor/
-│  ├─ parser/
-│  ├─ compiler/
-│  ├─ runner/
-│  ├─ exercise-engine/
-│  ├─ content/
-│  ├─ progress-store/
-│  └─ shared/
-├─ docs/
-└─ README.md
-```
 
 ---
 
@@ -697,15 +695,30 @@ V1 is successful when a learner can:
 
 ---
 
-## 19. Future extensions
+## 19. Instructor-side quality assurance
+
+The platform includes a full CLI-based pipeline for instructors to create, verify, and quality-control exercises:
+
+| Tool | Command | Purpose |
+|------|---------|--------|
+| Generator | `npm run pc-judge <slug>` | Convert exercises to standalone JDK packages |
+| Batch generator | `npm run pc-judge:all` | Generate all 84 packages |
+| Verification | `npm run pc-judge:verify verify-refs` | Verify all reference solutions pass 100% |
+| Coverage | `npm run pc-judge:coverage` | Measure JaCoCo line/branch/method coverage |
+| Lint | `npm run lint:exercises` | Catch common authoring errors |
+
+See [scripts/pc-judge-guide.md](../scripts/pc-judge-guide.md) for detailed usage.
+
+---
+
+## 20. Future extensions
 
 Future versions may add:
 
 - user accounts and cloud sync
 - teacher dashboards
-- hidden submissions history
-- analytics
-- more languages
+- analytics and submission history
+- more languages beyond Java
 - hybrid browser + backend judge modes
 - classroom assignment workflows
 

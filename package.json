@@ -11,7 +11,8 @@
     "lint:exercises": "npx tsx scripts/lint_exercises.ts",
     "pc-judge": "npx tsx scripts/generate-pc-judge.ts",
     "pc-judge:all": "npx tsx scripts/generate-pc-judge.ts --all",
-    "pc-judge:verify": "npx tsx scripts/verify-pc-judge.ts"
+    "pc-judge:verify": "npx tsx scripts/verify-pc-judge.ts",
+    "pc-judge:coverage": "npx tsx scripts/coverage-refs.ts"
   },
   "devDependencies": {
     "@types/marked": "^5.0.2",

@@ -1,139 +1,124 @@
-# algo-journey
+# Algo Journey
 
-Practice programming problems in a **LeetCode-style experience**, directly in your browser.
-
-`algo-journey` is an open-source learning platform for **students and educators**. Learners pick a problem, write code, click **Run**, and see results immediately — with **basic Java** checked entirely on the browser, without requiring a backend judge.
+> A hands-on programming practice platform for university courses — built for students who want instant feedback, and educators who want rigorous, AI-assisted assessment.
 
 ---
 
-## What learners can do
+## What is Algo Journey?
 
-- Solve common programming exercises in a familiar online-judge style
-- Practice by **topic** and **difficulty**
-- See **compile errors, runtime errors, and test results instantly**
-- Track progress locally in the browser
-- Learn step by step without a heavy setup
+**Algo Journey** is an open-source coding practice platform designed for Java programming courses at the university level. It covers a broad curriculum — from classic algorithms and data structures to object-oriented design and Design Patterns — presented in a clean, interactive interface that runs entirely in the browser.
+
+Students write, run, and get results immediately. No setup. No login. No waiting.
 
 ---
 
-## What makes this project different
+## For Students
 
-### Browser-side judging
-For V1, code checking for **basic Java** runs fully in the browser.
+- **Write code, see results instantly** — browser-based Java execution with compile errors, runtime errors, and test output shown in real time
+- **Practice by topic and difficulty** — algorithms, data structures, OOP, Design Patterns, and more
+- **Learn at your own pace** — progress is tracked locally; pick up where you left off
+- **Familiar experience** — a clean, distraction-free interface similar to LeetCode or HackerRank
 
-That means:
-- faster feedback
-- simpler deployment
-- lower infrastructure cost
-- no backend judge required for core practice
+### Curriculum coverage
 
-### Built for learning
-This project is not trying to be a full Java IDE.
-It is designed to help students practice:
-- algorithms
-- problem solving
-- core programming logic
-- introductory object-oriented programming
-
-### Open source and extensible
-`algo-journey` is built to be easy to grow.
-Future contributors can extend it with:
-- more exercises
-- better hints and feedback
-- teacher workflows
-- saved submissions
-- cloud sync
-- more languages
-- optional hybrid backend execution
+| Category         | Examples                                           |
+|------------------|----------------------------------------------------|
+| Algorithms       | Sorting, Binary Search, Prefix Sum, Sliding Window |
+| Data Structures  | Stack, Queue, Linked List, Hash Map                |
+| OOP & Design     | Polymorphism, Inheritance, Interface               |
+| Design Patterns  | Decorator, Observer, Strategy, Factory, Adapter, Command, State |
 
 ---
 
-## Planned learner experience
+## For Educators
 
-1. Open a problem
-2. Read the statement
-3. Write code in the browser
-4. Click **Run**
-5. See the result immediately
-6. Continue learning with progress saved locally
+Algo Journey is more than a student-facing tool. It includes a full **instructor-side framework** for creating, verifying, and quality-controlling exercises — built with AI-assisted authoring in mind.
 
----
+### AI-Assisted Exercise Authoring
 
-## V1 scope
+Each exercise is defined in a structured TypeScript schema (`.exercise.ts` + `.gen.ts` + `.solution.java`) that separates:
+- **Problem statement and constraints**
+- **Test case generation** (both static and randomized stress tests)
+- **Reference solution** for ground-truth validation
 
-The first version focuses on:
+This schema is designed to be drafted with AI assistance, then verified and committed by the instructor. The separation of concerns makes it easy to audit, update, and expand the exercise library systematically.
 
-- **basic Java**
-- common algorithm exercises
-- LeetCode-style practice flow
-- browser-based judging
-- problem organization by topic and difficulty
-- local progress tracking
+### PC Judge — Offline Grading Toolkit
 
-Planned Java support includes common beginner-friendly features such as:
+For in-class or exam scenarios where students submit `.java` files directly, the **PC Judge** system converts any exercise into a self-contained grading package that runs with a single command:
 
-- classes
-- methods
-- arrays
-- strings
-- loops
-- recursion
-- `List`
-- `ArrayList`
-- `Map`
-- `HashMap`
-- `Hashtable`
+```bash
+javac Runner.java StudentFile.java
+java Runner
+```
 
----
+Each package includes a test harness (`Runner.java`), a reference solution, and automated grading scripts. No internet. No backend. Just JDK.
 
-## Who this is for
+### Quality Control Pipeline
 
-### Students
-A lightweight place to practice programming and see results quickly.
+A set of CLI tools keeps the exercise library honest:
 
-### Teachers
-A practical platform for classroom exercises and guided self-study.
+```bash
+# Verify all reference solutions pass 100% of their own tests
+npm run pc-judge:verify verify-refs
 
-### Contributors
-An open-source foundation for browser-based coding education.
+# Measure actual code coverage of the test suite (line, branch, method)
+npm run pc-judge:coverage
+```
 
----
+**Test verification** (`3_report_ref.json`) flags any exercise where the generator logic is broken or the reference solution is wrong — catching authoring errors before students ever see them.
 
-## Project direction
+**Code coverage measurement** (`4_report_coverage.json`) uses [JaCoCo](https://www.jacoco.org/) (downloaded automatically — only JDK required) to report exactly which lines and branches of the reference solution the test suite actually exercises:
 
-`algo-journey` starts with a clear and practical goal:
+```
+[coffee-decorator] ✓  23/23 pass  |  lines=100%  branches=92.86%  methods=100%
+```
 
-> Help students practice common programming problems in a browser-first environment with immediate feedback.
+Branch coverage below 100% is a concrete signal that the test generator has blind spots — edge cases that exist in the solution but are never tested. This turns qualitative judgment ("are these tests good?") into a measurable, auditable number.
 
-From there, it can grow into a richer open-source learning platform.
+### Suspicious Test Detection
+
+The verification pipeline also flags **statistically weak test suites** — cases where the generator produces repetitive expected outputs (e.g., always returning `false`) that a trivially wrong solution could accidentally pass. These are reported as `POOR_TESTS` warnings in the coverage report.
 
 ---
 
-## Technical foundation
+## Technical Foundation
 
-The current V1 direction uses open-source browser-first tooling:
-
-- **Monaco Editor**
-- **Tree-sitter**
-- **teavm-javac**
-- **TeaVM**
-- **Web Workers**
-
-These tools make it possible to support browser-based Java practice without depending on a traditional server-side judge for the first version.
+| Layer             | Technology                          |
+|-------------------|-------------------------------------|
+| Browser editor    | Monaco Editor                       |
+| In-browser Java   | TeaVM + teavm-javac + Web Workers   |
+| Exercise schema   | TypeScript (`.exercise.ts`, `.gen.ts`) |
+| PC Judge harness  | Pure Java (JDK only)                |
+| Coverage tooling  | JaCoCo 0.8.13 (auto-downloaded)     |
+| Instructor CLI    | Node.js / tsx                       |
 
 ---
 
-## File Structure & Docs
+## Project Structure
 
-- `scripts/` — administrative utilities for catalog arrangement and automation
-- `docs/Architecture.md` — system architecture and product boundaries
-- `docs/Tasks.md` — implementation phases and tracking
-- `docs/ExerciseSchema.md` — exercise format and evaluation schema
+```
+src/content/problems/     — Exercise definitions (.exercise.ts, .gen.ts, .solution.java)
+out/pc-judge/             — Generated PC Judge packages (one folder per exercise)
+out/lib/jacoco/           — JaCoCo JARs (auto-downloaded on first coverage run)
+scripts/                  — Instructor CLI tools
+  generate-pc-judge.ts    — Converts exercises into PC Judge packages
+  verify-pc-judge.ts      — Verifies reference solutions (verify-refs, run-starter, clean)
+  coverage-refs.ts        — Measures JaCoCo coverage of each exercise's test suite
+```
+
+Key reports written to `out/pc-judge/`:
+
+| File | Description |
+|------|-------------|
+| `1_report_starter.json` | Starter code behavior (does the skeleton compile and run?) |
+| `3_report_ref.json`     | Reference solution verification (100% pass check + suspicious test detection) |
+| `4_report_coverage.json`| JaCoCo line/branch/method coverage per exercise |
 
 ---
 
 ## Contributing
 
-If you care about programming education, browser tooling, or open-source learning platforms, this project is built to be easy to understand and extend.
+If you care about programming education, open-source tooling, or AI-assisted curriculum design, this project is built to be easy to understand and extend.
 
-Contributions are welcome.
+Contributions welcome — new exercises, new Design Pattern problems, UI improvements, or enhancements to the instructor toolchain.

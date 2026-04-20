@@ -6,6 +6,7 @@ export default defineTests('two-sum-basic', (t, rng) => {
   t.visible('example-2', { args: [[3, 2, 4], 6], expected: [1, 2] });
   t.visible('same-elements', { args: [[3, 3], 6], expected: [0, 1] });
   t.visible('negative-sum', { args: [[-1, -2, -3, -4], -6], expected: [1, 3] });
+  t.visible('no-solution', { args: [[1, 2, 3, 4], 100], expected: [-1, -1] });
 
   // ── Hidden Tests — edge cases (8) ──
   t.hidden('first-last', { args: [[1, 5, 4, 7], 8], expected: [0, 3] });

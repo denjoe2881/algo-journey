@@ -8,7 +8,7 @@
  *
  *   javac *.java && java Runner
  *
- * Each output folder (docs/pc-judge/<exercise-id>/) contains:
+ * Each output folder (out/pc-judge/<exercise-id>/) contains:
  *   Runner.java        — harness with main(), static tests, and javaGenerator
  *   <StarterFile>.java — student submission placeholder
  *   ListNode.java      — (if needed) helper class
@@ -33,7 +33,7 @@ const __dirname = path.dirname(__filename);
 
 const ROOT        = path.resolve(__dirname, '..');
 const PROBLEMS    = path.join(ROOT, 'src', 'content', 'problems');
-const OUTPUT_DIR  = path.join(ROOT, 'docs', 'pc-judge');
+const OUTPUT_DIR  = path.join(ROOT, 'out', 'pc-judge');
 
 // ─── Minimal type interfaces (no Vite deps) ───────────────────────
 

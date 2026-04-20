@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const pcJudgeDir = path.resolve(__dirname, '../docs/pc-judge');
+const pcJudgeDir = path.resolve(__dirname, '../out/pc-judge');
 
 interface Problem {
   slug: string;
@@ -73,7 +73,7 @@ function runStarter() {
   const reportPath = path.join(pcJudgeDir, '1_report_starter.json');
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
   console.log(`\nComplete! 🎉`);
-  console.log(`Report saved to docs/pc-judge/1_report_starter.json`);
+  console.log(`Report saved to out/pc-judge/1_report_starter.json`);
   console.log(`Success: ${report.success}, Compile Errors: ${report.compile_errors}, Crashes: ${report.crashes}`);
 }
 
@@ -207,7 +207,7 @@ function verifyRefs(targetSlugs: string[] = []) {
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
   console.log(`\nComplete! 🎉`);
   console.log(`Perfect: ${report.perfect}/${problems.length}. Failed: ${report.failedOrCrashed}`);
-  console.log(`Report saved to docs/pc-judge/3_report_ref.json`);
+  console.log(`Report saved to out/pc-judge/3_report_ref.json`);
 }
 
 const args = process.argv.slice(2);

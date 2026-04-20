@@ -1,8 +1,8 @@
-# ExerciseSchema.md
+# exercise-schema.md
 ## algo-journey — Exercise definition, metadata, and evaluation contract
 
-Version: 1.2  
-Status: Implemented — 15 exercises authored, schema validated  
+Version: 2.0  
+Status: Implemented — 84 exercises authored across 11 topics  
 Repository: `algo-journey`
 
 ---
@@ -229,10 +229,9 @@ Suggested stable topic values:
 - `searching`
 - `sorting`
 - `math`
-- `classes`
-- `collections`
-
-More can be added later, but the initial set should remain simple.
+- `design` (OOP, Design Patterns)
+- `linked-list`
+- `mono-stack`
 
 ### 7.2 Difficulty values for V1
 
@@ -455,6 +454,31 @@ The TeaVM Java Class Library is condensed. It may struggle parsing deeply nested
 ### 13.7 Adjust JavaGenerator lengths to avoid VM Timeouts
 If the exercise inherently expects an $O(N^2)$ brute-force solution (like Basic Two Sum or Pairs with Sum), strictly cap array bounds to `< 30,000` integers. Generating 100,000 inputs and executing boxed iteration operations locally inside the JS WebAssembly thread easily exceeds the 5-second `RunWorker` watchdog timeline.
 
+### 13.8 `javaGenerator` — Hidden Stress Test Generation
+
+For exercises that need randomized stress testing beyond static test cases, use the `javaGenerator` field in the exercise definition. This generates Java code that runs inside `Runner.java` and produces random tests at runtime.
+
+**Structure in `.exercise.ts`:**
+```typescript
+evaluation: {
+  comparator: 'exact_json',
+  javaGenerator: {
+    testCount: 20,
+    genMethodBody: `
+      // Java code that generates random inputs, calls student method,
+      // compares with reference implementation, and prints AJ|test-N|pass|actual|expected
+    `
+  }
+}
+```
+
+**Key rules:**
+- The generator runs inside `Runner.java` with access to `java.util.Random` seeded deterministically
+- Output format: `System.out.println("AJ|test-" + i + "|" + pass + "|" + actual + "|" + expected)`
+- For `class_implementation` exercises: create both student and reference objects, replay random operations, compare results
+- Always clone arrays before passing to student code (`arr.clone()`) to prevent in-place mutation
+- Keep stress test complexity within VM timeout limits
+
 ---
 
 ## 14. Example: function exercise
@@ -593,22 +617,25 @@ Before adding a new exercise, confirm:
 
 ### 17.1 Exercises authored
 
-| Topic | Count | Difficulty |
-|---|---|---|
-| arrays | 5 | easy |
-| strings | 2 | easy |
-| loops | 2 | easy |
-| conditionals | 1 | easy |
-| recursion | 2 | easy |
-| searching | 1 | medium |
-| sorting | 1 | medium |
-| classes | 1 | easy |
-| **Total** | **15** | |
+| Topic | Count | Difficulty | Modes |
+|---|---|---|---|
+| arrays | 33 | easy–medium | function_implementation |
+| design | 25 | easy–medium | class_implementation |
+| linked-list | 6 | easy–medium | function_implementation |
+| mono-stack | 6 | medium–hard | function_implementation |
+| strings | 3 | easy | function_implementation |
+| math | 3 | easy | function_implementation |
+| loops | 2 | easy | function_implementation |
+| recursion | 2 | easy | function_implementation |
+| sorting | 2 | easy | function_implementation |
+| searching | 1 | medium | function_implementation |
+| conditionals | 1 | easy | function_implementation |
+| **Total** | **84** | | |
 
 ### 17.2 Modes implemented
 
-- `function_implementation` — ✅ Fully supported (primary mode)
-- `class_implementation` — ✅ Schema supported, 1 exercise authored
+- `function_implementation` — ✅ Fully supported (primary mode, 59 exercises)
+- `class_implementation` — ✅ Fully supported (25 exercises, operations-based testing)
 - `main_program` — 🔲 Schema ready, no exercises authored yet
 
 ### 17.3 Comparators implemented
@@ -622,6 +649,11 @@ Before adding a new exercise, confirm:
 
 ### 17.4 Data format
 
-Exercises are currently defined as TypeScript objects in `src/content/exercise-registry.ts` and `src/content/catalog-data.ts`. The schema matches the JSON spec in this document. Migration to standalone `.json` files is planned for M4.
+Exercises use a **file-per-problem** architecture with three files per exercise:
+- `<slug>.exercise.ts` — metadata, statement, starter code, evaluation config
+- `<slug>.gen.ts` — test cases (visible + hidden) using seeded RNG
+- `<slug>.solution.java` — reference solution
+
+Files are organized by topic under `src/content/problems/<topic>/` and auto-discovered via Vite's `import.meta.glob`.
 
 Future schema extensions should be added carefully without breaking current content.

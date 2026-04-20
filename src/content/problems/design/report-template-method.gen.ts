@@ -16,6 +16,17 @@ export default defineTests('report-template-method', (t) => {
     ],
   });
 
+  t.visible('null-exporter', {
+    operations: [
+      ['ReportSystem'],
+      ['generateReport', 'null'],
+    ],
+    expected: [
+      null,
+      'No exporter provided',
+    ],
+  });
+
   t.hidden('repeated-calls', {
     operations: [
       ['ReportSystem'],
