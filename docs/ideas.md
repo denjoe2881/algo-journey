@@ -37,3 +37,18 @@ Mục tiêu là brainstorm và định hướng ưu tiên, chưa đi vào thiế
 
 - Nên tách riêng content khỏi code ứng dụng.
 - Hiện tại content đang được build cùng code, nên về lâu dài sẽ khó mở rộng và bảo trì.
+
+## 8. Cho xem solution sau đủ cố gắng
+
+- Có thể cho sinh viên xem solution sau một số lần thử và một khoảng thời gian đủ dài.
+- Mục tiêu là vẫn buộc sinh viên suy nghĩ trước khi xem đáp án.
+
+## 9. Cho phép download toàn bộ submissions
+
+- Nên cho phép export hoặc download toàn bộ submissions của sinh viên.
+- Tính năng này hữu ích cho việc lưu trữ, chấm offline, hoặc phân tích quá trình học.
+
+## 10. Sinh prompt để AI hỗ trợ
+
+- Có thể cho hệ thống sinh sẵn prompt để hỗ trợ sinh viên bằng AI.
+- Prompt nên bám theo bài hiện tại, code hiện tại, và mức hỗ trợ mong muốn.
