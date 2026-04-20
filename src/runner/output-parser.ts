@@ -44,7 +44,9 @@ export function parseRunnerOutput(
       if (parts.length >= 3) {
         const name   = parts[1];
         const errMsg = parts.slice(2).join('|');
-        resultMap.set(name, { name, status: 'error' as const, message: errMsg });
+        if (name) {
+          resultMap.set(name, { name, status: 'error' as const, message: errMsg });
+        }
       }
       continue;
     }
@@ -71,7 +73,6 @@ export function parseRunnerOutput(
 
     // ── New format: TEST|<name>|<pass>|<actual>|<expected> ───────
     if (line.startsWith('TEST|') || line.startsWith('AJ|')) {
-      const isLegacy = line.startsWith('AJ|');
       const parts = line.split('|');
       if (parts.length < 5) continue;
       
@@ -96,7 +97,7 @@ export function parseRunnerOutput(
               actual = payload.substring(0, splitIdx + 1);
               expected = payload.substring(splitIdx + 2); // skip '|'
           } else {
-              actual = parts[3];
+              actual = parts[3] ?? '';
               expected = parts.slice(4).join('|');
           }
       }

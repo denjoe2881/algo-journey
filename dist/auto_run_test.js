@@ -5,9 +5,14 @@
  * HOW TO RUN (from browser DevTools Console):
  *   1. Load the script (once):
  *      import('/auto_run_test.js')
- *   2. Run the test (whenever you want):
- *      auto_run_test()
- *
+ *   2. Run all tests:
+ *      auto_run_test()         — run every problem
+ *      auto_run_test(true)     — skip already-accepted problems (checks app progress)
+ *   3. Test current problem with solution:
+ *      auto_run_solution()     — loads solution for current page & submits
+ *   4. await import('/auto_run_test.js?t=' + Date.now()).then(() => window.auto_run_test(true))
+ *      await import('/auto_run_test.js?t=' + Date.now()).then(() => window.auto_run_solution())
+ * 
  * REQUIRES:  npm run dev  (Vite dev server)
  * The app exposes window.__algoDev automatically in dev mode.
  *
@@ -47,9 +52,11 @@ function getApi() {
 function readScore() {
   const statsEl = document.querySelector('.result-summary__stats');
   if (!statsEl) return null;
-  const m = statsEl.textContent?.match(/(\d+)\s*\/\s*(\d+)/);
-  if (!m) return null;
-  return { passed: parseInt(m[1]), total: parseInt(m[2]) };
+  const text = statsEl.textContent || '';
+  const m = text.match(/(\d+)\s*\/\s*(\d+)/);
+  if (m) return { passed: parseInt(m[1]), total: parseInt(m[2]) };
+  if (text.toLowerCase().includes('error')) return { passed: 'err', total: 'err' };
+  return null;
 }
 
 /** Click a button by id, return false if not found */
@@ -114,16 +121,31 @@ window.auto_run_test = async function (onlyFailing = false) {
     localStorage.removeItem(STORE_KEY);
   }
 
-  const okIds = report.filter(r => r.status === '🟢 OK' || r.status === '🟡 WEAK_TESTS').map(r => r.id);
+  // When onlyFailing: skip problems that are 'accepted' in app progress
+  // This catches ALL failures — manual submissions, auto-test runs, etc.
+  let acceptedIds = new Set();
+  if (onlyFailing) {
+    try {
+      const allProgress = await api.getAllProgress();
+      acceptedIds = new Set(
+        allProgress.filter(p => p.status === 'accepted').map(p => p.problemId)
+      );
+    } catch (e) {
+      console.warn('⚠️ Could not read app progress, falling back to report-based skip');
+      // Fallback: use report
+      report.filter(r => r.status === '🟢 OK' || r.status === '🟡 WEAK_TESTS')
+        .forEach(r => acceptedIds.add(r.id));
+    }
+  }
 
   // Filter and limit
   const problems = catalog
     .filter(p => !CFG.SKIP_SLUGS.includes(p.id))
-    .filter(p => !onlyFailing || !okIds.includes(p.id))
+    .filter(p => !onlyFailing || !acceptedIds.has(p.id))
     .slice(0, CFG.MAX_PROBLEMS);
 
   if (onlyFailing) {
-    console.log(`⏭️ Skipping ${okIds.length} already OK/WEAK problems.`);
+    console.log(`⏭️ Skipping ${acceptedIds.size} accepted problems.`);
   }
   console.log(`📋 Found ${catalog.length} problems, testing ${problems.length}…\n`);
 
@@ -181,17 +203,60 @@ window.auto_run_test = async function (onlyFailing = false) {
       const solN = solScore?.passed ?? -1;
       const solTot = solScore?.total ?? 20;
 
+      // Extract trivial passes from window.__lastRunResult for solution run
+      let trivialCount = 0;
+      let suspiciousTestWarning = '';
+      if (window.__lastRunResult && window.__lastRunResult.tests) {
+        const tests = window.__lastRunResult.tests;
+        const TRIVIAL_SENTINELS = new Set(['[]', '', 'null', '0', '-1', 'true', 'false']);
+        
+        const expectedCounts = new Map();
+        let isAllBoolean = true;
+
+        for (const t of tests) {
+          if (t.status === 'passed' && t.actualPreview === t.expectedPreview && TRIVIAL_SENTINELS.has(t.actualPreview?.trim())) {
+            trivialCount++;
+          }
+          const exp = t.expectedPreview ? t.expectedPreview.trim() : '';
+          expectedCounts.set(exp, (expectedCounts.get(exp) || 0) + 1);
+          if (exp !== 'true' && exp !== 'false') {
+            isAllBoolean = false;
+          }
+        }
+
+        if (!isAllBoolean) {
+          const threshold = tests.length / 5;
+          let maxCount = 0;
+          let maxVal = '';
+          for (const [val, count] of expectedCounts.entries()) {
+             if (count > maxCount) {
+                maxCount = count;
+                maxVal = val;
+             }
+          }
+          if (maxCount > threshold && tests.length > 0 && !maxVal.endsWith('...')) {
+             suspiciousTestWarning = `Expected "${maxVal.length > 50 ? maxVal.substring(0, 50) + '...' : maxVal}" repeated ${maxCount}/${tests.length}`;
+          }
+        }
+      }
+
       let status;
       if (!solution) status = '🔵 NO_SOLUTION';
       else if (solN < solTot) status = '🔴 SOL_FAILS';
-      else if (blankN > CFG.WEAK_THRESHOLD) status = '🟡 WEAK_TESTS';
+      else if (trivialCount >= solTot && solTot > 0) status = '🟠 ALL_TRIVIAL';
+      else if (blankN > 18) status = '🟠 ALL_TRIVIAL'; // Even if not matching sentinel exactly, blank passing 19-20 tests means useless tests.
+      else if (suspiciousTestWarning) status = '🟣 POOR_TESTS';
+      else if (blankN >= Math.max(CFG.WEAK_THRESHOLD, solTot * 0.25)) status = '🟡 WEAK_TESTS';
       else status = '🟢 OK';
 
-      const blankStr = blankScore ? `${blankN}/${blankTot}` : '?/?';
-      const solStr = solScore ? `${solN}/${solTot}` : (solution ? '?/?' : 'N/A');
-      console.log(`  ${status}  blank=${blankStr}  solution=${solStr}`);
+      const blankStr = blankScore ? (blankScore.passed === 'err' ? 'Err/Err' : `${blankN}/${blankTot}`) : '?/?';
+      const solStr = solScore ? (solScore.passed === 'err' ? 'Err/Err' : `${solN}/${solTot}`) : (solution ? '?/?' : 'N/A');
+      let extraLabel = trivialCount > 0 ? ` (trivial: ${trivialCount})` : '';
+      if (suspiciousTestWarning) extraLabel += ` [${suspiciousTestWarning}]`;
+      
+      console.log(`  ${status}  blank=${blankStr}  solution=${solStr}${extraLabel}`);
 
-      const resultObj = { id, title, topic, difficulty, blankPassed: blankN, blankTotal: blankTot, solPassed: solN, solTotal: solTot, status };
+      const resultObj = { id, title, topic, difficulty, blankPassed: blankN, blankTotal: blankTot, solPassed: solN, solTotal: solTot, trivialCount, suspiciousTestWarning, status };
 
       // Update report incrementally & save to localStorage
       const existingIdx = report.findIndex(r => r.id === id);
@@ -216,6 +281,8 @@ window.auto_run_test = async function (onlyFailing = false) {
   // Group by status
   const ok = report.filter(r => r.status === '🟢 OK');
   const weak = report.filter(r => r.status === '🟡 WEAK_TESTS');
+  const trivial = report.filter(r => r.status === '🟠 ALL_TRIVIAL');
+  const poor = report.filter(r => r.status === '🟣 POOR_TESTS');
   const broken = report.filter(r => r.status === '🔴 SOL_FAILS');
   const noSolution = report.filter(r => r.status === '🔵 NO_SOLUTION');
   const noPage = report.filter(r => r.status === '⚫ NO_PAGE');
@@ -228,15 +295,19 @@ window.auto_run_test = async function (onlyFailing = false) {
   console.log('─'.repeat(72));
 
   for (const r of report) {
-    const blankStr = (r.blankPassed !== '?') ? `${r.blankPassed}/${r.blankTotal}` : '?/?';
-    const solStr = (r.solPassed !== '?') ? `${r.solPassed}/${r.solTotal}` : (r.status === '🔵 NO_SOLUTION' ? 'N/A' : '?/?');
+    const blankStr = (r.blankPassed === 'err') ? 'Err' : ((r.blankPassed !== '?') ? `${r.blankPassed}/${r.blankTotal}` : '?/?');
+    const solStr = (r.solPassed === 'err') ? 'Err' : ((r.solPassed !== '?') ? `${r.solPassed}/${r.solTotal}` : (r.status === '🔵 NO_SOLUTION' ? 'N/A' : '?/?'));
+    const trivAdd = r.trivialCount ? ` (triv:${r.trivialCount})` : '';
+    const poorAdd = r.suspiciousTestWarning ? ` [${r.suspiciousTestWarning}]` : '';
     console.log(
-      pad(r.id, 32) + pad(r.topic, 12) + pad(blankStr, 8) + pad(solStr, 10) + r.status
+      pad(r.id, 32) + pad(r.topic, 12) + pad(blankStr, 8) + pad(solStr, 10) + r.status + trivAdd + poorAdd
     );
   }
 
   console.log('\n' + '─'.repeat(72));
   console.log(`  🟢 OK            : ${ok.length}  —  ${ok.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  🟣 Poor tests    : ${poor.length}  —  ${poor.map(r => r.id).join(', ') || 'none'}`);
+  console.log(`  🟠 All Trivial   : ${trivial.length}  —  ${trivial.map(r => r.id).join(', ') || 'none'}`);
   console.log(`  🟡 Weak tests    : ${weak.length}  —  ${weak.map(r => r.id).join(', ') || 'none'}`);
   console.log(`  🔴 Solution fails: ${broken.length}  —  ${broken.map(r => r.id).join(', ') || 'none'}`);
   console.log(`  🔵 No solution   : ${noSolution.length}  —  ${noSolution.map(r => r.id).join(', ') || 'none'}`);
@@ -255,6 +326,63 @@ window.auto_run_test = async function (onlyFailing = false) {
   } catch (_) { }
 
   return report;
+};
+
+// ── Quick solution runner for current problem ─────────────────────────
+
+window.auto_run_solution = async function () {
+  const api = getApi();
+
+  // Extract current problem slug from hash
+  const hashMatch = window.location.hash.match(/#\/problem\/(.+)/);
+  if (!hashMatch) {
+    console.error('❌ Not on a problem page. Navigate to a problem first.');
+    return;
+  }
+  const slug = hashMatch[1];
+  console.log(`%c🔧 Loading solution for "${slug}"…`, 'color:#6ee7b7;font-size:13px;font-weight:bold');
+
+  // Load solution
+  let solution = null;
+  try {
+    solution = await api.getSolution(slug);
+  } catch (e) {
+    console.error(`❌ Could not load solution for "${slug}":`, e);
+    return;
+  }
+  if (!solution) {
+    console.error(`❌ No reference solution found for "${slug}"`);
+    return;
+  }
+
+  // Set code and submit
+  api.setCode(solution);
+  await sleep(300);
+  clickBtn('submit-btn');
+  await waitForResult();
+  switchToResultTab();
+  await sleep(200);
+
+  const score = readScore();
+  if (score) {
+    const icon = score.passed === score.total ? '✅' : '❌';
+    console.log(`${icon} Solution result: ${score.passed}/${score.total}`);
+    
+    // Print detailed test info if available
+    const runResult = window.__lastRunResult;
+    if (runResult && runResult.tests) {
+       console.log('%c--- Chi tiết từng test ---', 'color:#9ca3af;font-weight:bold');
+       runResult.tests.forEach(t => {
+           let passIcon = t.status === 'passed' ? '✅' : '❌';
+           console.log(`%c${passIcon} ${t.name}`, 'font-weight:bold; color:' + (t.status === 'passed' ? '#34d399' : '#f87171'));
+           console.log(`  Expected: ${t.expectedPreview || 'N/A'}`);
+           console.log(`  Actual:   ${t.actualPreview || 'N/A'}`);
+       });
+       console.log('%c------------------------', 'color:#9ca3af;font-weight:bold');
+    }
+  } else {
+    console.warn('⚠️ Could not read score. Check the Test Result tab manually.');
+  }
 };
 
 // Initialize window.__autoTestReport from persistent storage immediately on script load

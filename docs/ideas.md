@@ -32,3 +32,8 @@ Mục tiêu là brainstorm và định hướng ưu tiên, chưa đi vào thiế
 
 - Nên cải thiện Loader / Runner cho cả Web và PC Judge.
 - Hướng chính là tách riêng phần sinh input, chạy chương trình và kiểm tra output.
+
+## 7. Tách biệt content và code
+
+- Nên tách riêng content khỏi code ứng dụng.
+- Hiện tại content đang được build cùng code, nên về lâu dài sẽ khó mở rộng và bảo trì.
