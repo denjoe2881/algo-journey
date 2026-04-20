@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Implement a publish-subscribe notification system using the Observer pattern.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'observer-pattern', 'events', 'cse202'],
+  tags: ['design', 'observer-pattern', 'events', 'cse203'],
   estimatedMinutes: 20,
   order: 453,
   mode: 'class_implementation',

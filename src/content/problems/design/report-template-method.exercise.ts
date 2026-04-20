@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Define the skeleton of an algorithm in an operation, deferring some steps to subclasses using the Template Method Pattern.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'template-method', 'inheritance', 'cse202'],
+  tags: ['design', 'template-method', 'inheritance', 'cse203'],
   estimatedMinutes: 20,
   order: 458,
   mode: 'class_implementation',

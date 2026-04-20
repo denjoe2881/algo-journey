@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Implement a text editor with undo and redo capabilities using the Command Design Pattern to encapsulate operations.',
   topic: 'design',
   difficulty: 'medium',
-  tags: ['design', 'command-pattern', 'stack', 'cse202'],
+  tags: ['design', 'command-pattern', 'stack', 'cse203'],
   estimatedMinutes: 30,
   order: 454,
   mode: 'class_implementation',

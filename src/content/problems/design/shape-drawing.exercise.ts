@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Manage basic shapes using an interface to calculate area, perimeter, and maintain polymorphism.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'polymorphism', 'inheritance', 'cse202'],
+  tags: ['design', 'polymorphism', 'inheritance', 'cse203'],
   estimatedMinutes: 20,
   order: 452,
   mode: 'class_implementation',

@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Define a family of grading algorithms, encapsulate each one, and make them interchangeable using the Strategy Pattern.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'strategy-pattern', 'polymorphism', 'cse202'],
+  tags: ['design', 'strategy-pattern', 'polymorphism', 'cse203'],
   estimatedMinutes: 20,
   order: 459,
   mode: 'class_implementation',

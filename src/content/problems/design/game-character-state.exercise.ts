@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Implement a character whose behavior changes entirely depending on its current state without using long if-else chains.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'state-pattern', 'polymorphism', 'cse202'],
+  tags: ['design', 'state-pattern', 'polymorphism', 'cse203'],
   estimatedMinutes: 20,
   order: 457,
   mode: 'class_implementation',

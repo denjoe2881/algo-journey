@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Implement the Factory Method pattern to encapsulate the instantiation of various vehicle types.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'factory-pattern', 'polymorphism', 'cse202'],
+  tags: ['design', 'factory-pattern', 'polymorphism', 'cse203'],
   estimatedMinutes: 20,
   order: 455,
   mode: 'class_implementation',

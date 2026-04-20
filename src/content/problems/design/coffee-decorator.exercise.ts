@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Dynamically add features (toppings) to an object using the Decorator Pattern without altering its structure.',
   topic: 'design',
   difficulty: 'medium',
-  tags: ['design', 'decorator-pattern', 'composition', 'cse202'],
+  tags: ['design', 'decorator-pattern', 'composition', 'cse203'],
   estimatedMinutes: 25,
   order: 456,
   mode: 'class_implementation',

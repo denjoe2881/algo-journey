@@ -49,22 +49,10 @@ export function parseRunnerOutput(
       continue;
     }
 
-    // ── New format: TEST|<name>|<pass>|<actual>|<expected> ───────
-    if (line.startsWith('TEST|')) {
-      const parts = line.split('|');
-      if (parts.length < 5) continue;
-      const [, name, passStr, actual, ...rest] = parts;
-      const expected = rest.join('|');
-      if (!name) continue;
-
-      const passed = passStr === 'true';
-      resultMap.set(name, {
-        name,
-        status: passed ? 'passed' : 'failed',
-        actualPreview:   actual?.slice(0, 300),
-        expectedPreview: expected?.slice(0, 300),
-      });
-      continue;
+    function truncateWithEllipsis(str: string | undefined, max: number): string | undefined {
+      if (!str) return str;
+      if (str.length > max) return str.slice(0, max) + '...';
+      return str;
     }
 
     // ── Legacy format: AJ_ERROR|testname: exception ───────────────
@@ -81,19 +69,43 @@ export function parseRunnerOutput(
       continue;
     }
 
-    // ── Legacy format: AJ|<name>|<pass>|<actual>|<expected> ──────
-    if (line.startsWith('AJ|')) {
+    // ── New format: TEST|<name>|<pass>|<actual>|<expected> ───────
+    if (line.startsWith('TEST|') || line.startsWith('AJ|')) {
+      const isLegacy = line.startsWith('AJ|');
       const parts = line.split('|');
       if (parts.length < 5) continue;
-      const [, name, passStr, actual, expected] = parts;
+      
+      const name = parts[1];
+      const passStr = parts[2];
       if (!name) continue;
 
       const passed = passStr === 'true';
+      const payload = parts.slice(3).join('|');
+      let actual = '';
+      let expected = '';
+
+      if (passed) {
+          // If passed, actual is identical to expected.
+          // The payload is roughly "A|A". We cut exactly in half.
+          actual = payload.substring(0, Math.floor(payload.length / 2));
+          expected = actual;
+      } else {
+          // Heuristic to split when both arrays contain '|' inside.
+          const splitIdx = payload.indexOf(']|[');
+          if (splitIdx !== -1) {
+              actual = payload.substring(0, splitIdx + 1);
+              expected = payload.substring(splitIdx + 2); // skip '|'
+          } else {
+              actual = parts[3];
+              expected = parts.slice(4).join('|');
+          }
+      }
+
       resultMap.set(name, {
         name,
         status: passed ? 'passed' : 'failed',
-        actualPreview:   actual?.slice(0, 300),
-        expectedPreview: expected?.slice(0, 300),
+        actualPreview:   truncateWithEllipsis(actual, 200),
+        expectedPreview: truncateWithEllipsis(expected, 200),
       });
       continue;
     }

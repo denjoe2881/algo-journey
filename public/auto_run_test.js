@@ -365,6 +365,19 @@ window.auto_run_solution = async function () {
   if (score) {
     const icon = score.passed === score.total ? '✅' : '❌';
     console.log(`${icon} Solution result: ${score.passed}/${score.total}`);
+    
+    // Print detailed test info if available
+    const runResult = window.__lastRunResult;
+    if (runResult && runResult.tests) {
+       console.log('%c--- Chi tiết từng test ---', 'color:#9ca3af;font-weight:bold');
+       runResult.tests.forEach(t => {
+           let passIcon = t.status === 'passed' ? '✅' : '❌';
+           console.log(`%c${passIcon} ${t.name}`, 'font-weight:bold; color:' + (t.status === 'passed' ? '#34d399' : '#f87171'));
+           console.log(`  Expected: ${t.expectedPreview || 'N/A'}`);
+           console.log(`  Actual:   ${t.actualPreview || 'N/A'}`);
+       });
+       console.log('%c------------------------', 'color:#9ca3af;font-weight:bold');
+    }
   } else {
     console.warn('⚠️ Could not read score. Check the Test Result tab manually.');
   }

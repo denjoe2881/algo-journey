@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Allows incompatible interfaces to work together by wrapping an existing class with a new interface.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'adapter-pattern', 'polymorphism', 'cse202'],
+  tags: ['design', 'adapter-pattern', 'polymorphism', 'cse203'],
   estimatedMinutes: 20,
   order: 460,
   mode: 'class_implementation',

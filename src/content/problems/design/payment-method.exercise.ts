@@ -7,7 +7,7 @@ export default defineExercise({
   summary: 'Implement a payment system using the Strategy Pattern, allowing flexible payment methods without modifying the Order class.',
   topic: 'design',
   difficulty: 'easy',
-  tags: ['design', 'strategy-pattern', 'polymorphism', 'cse202'],
+  tags: ['design', 'strategy-pattern', 'polymorphism', 'cse203'],
   estimatedMinutes: 20,
   order: 451,
   mode: 'class_implementation',
