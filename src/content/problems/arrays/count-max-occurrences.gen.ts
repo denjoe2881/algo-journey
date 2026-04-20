@@ -18,8 +18,15 @@ export default defineTests('count-max-occurrences', (t, rng) => {
   // ── Generated Tests ──
   for (let i = 0; i < 10; i++) {
     const isLarge = i >= 8;
-    const len = isLarge ? rng.int(1000, 2000) : rng.int(5, 500);
+    const len = isLarge ? rng.int(1000, 2000) : rng.int(20, 500);
     const testArr = rng.intArray(len, -100, 100);
+    
+    // Inject custom max element explicitly to boost occurrences count randomly
+    const artificialCount = i === 0 ? 5 : (i === 1 ? 12 : rng.int(1, 15));
+    const forcedMax = 200 + i; // strictly larger than random bound of 100
+    for(let k=0; k<artificialCount; k++) {
+        testArr[rng.int(0, len-1)] = forcedMax;
+    }
     
     let max = testArr[0]!;
     for (const val of testArr) {

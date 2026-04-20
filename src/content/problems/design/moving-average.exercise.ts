@@ -72,8 +72,8 @@ Implement the \`MovingAverage\` class:\n\n- \`MovingAverage(int size)\` Initiali
             long refSum = 0;
             boolean pass = true;
             
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int val = rng.nextInt(20000) - 10000;

@@ -114,11 +114,11 @@ editor.getText();     // return "helloworld!"`,
             java.util.Stack<String> undoStack = new java.util.Stack<>();
             java.util.Stack<String> redoStack = new java.util.Stack<>();
             String currentText = "";
-            undoStack.push(currentText); // Sentinel initial state not strictly needed if we handled empties, but we'll do this
+            // undoStack.push(currentText); // Removed sentinel inline with proper Command Pattern
             
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(5);

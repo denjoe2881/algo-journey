@@ -78,5 +78,61 @@ class MyQueue {
     ],
   },
 
-  evaluation: { comparator: 'exact_json' }
+  evaluation: { 
+    comparator: 'exact_json',
+    javaGenerator: {
+      count: 20,
+      seed: 554433,
+      namePrefix: 'stress-',
+      visibility: 'hidden',
+      genMethodBody: `
+        for (int i = 0; i < 20; i++) {
+            int opsCount = (i < 5) ? 100 : 5000;
+            MyQueue obj = new MyQueue();
+            
+            java.util.ArrayList<Integer> refQueue = new java.util.ArrayList<>();
+
+            boolean pass = true;
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
+
+            for (int k = 0; k < opsCount; k++) {
+                int opType = refQueue.isEmpty() ? 0 : rng.nextInt(4);
+                if (opType == 0) { // push
+                    int val = rng.nextInt(1000) - 500;
+                    obj.push(val);
+                    refQueue.add(val);
+                } else if (opType == 1) { // pop
+                    int actualPop = obj.pop();
+                    int expectedPop = refQueue.remove(0);
+                    if (actualPop != expectedPop) {
+                        pass = false;
+                        firstMismatchAct = "[pop -> " + actualPop + "]";
+                        firstMismatchExp = "[pop -> " + expectedPop + "]";
+                        break;
+                    }
+                } else if (opType == 2) { // peek
+                    int actualPeek = obj.peek();
+                    int expectedPeek = refQueue.get(0);
+                    if (actualPeek != expectedPeek) {
+                        pass = false;
+                        firstMismatchAct = "[peek -> " + actualPeek + "]";
+                        firstMismatchExp = "[peek -> " + expectedPeek + "]";
+                        break;
+                    }
+                } else { // empty
+                    boolean actualEmpty = obj.empty();
+                    boolean expectedEmpty = refQueue.isEmpty();
+                    if (actualEmpty != expectedEmpty) {
+                        pass = false;
+                        firstMismatchAct = "[empty -> " + actualEmpty + "]";
+                        firstMismatchExp = "[empty -> " + expectedEmpty + "]";
+                        break;
+                    }
+                }
+            }
+            System.out.println("AJ|stress-" + i + "|" + pass + "|" + firstMismatchAct + "|" + firstMismatchExp);
+        }`
+    }
+  }
 });

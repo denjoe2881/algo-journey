@@ -86,13 +86,24 @@ Implement the \`BrowserHistory\` class:\n\n- \`BrowserHistory(String homepage)\`
             int curr = 0;
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
-                int type = rng.nextInt(10);
+                int type;
+                if (i < 4) {
+                    // Heavy visits
+                    type = rng.nextInt(10) < 8 ? 0 : (rng.nextInt(10) < 5 ? 1 : 2);
+                } else if (i < 8) {
+                    // Heavy back / forward to test limits
+                    type = rng.nextInt(10) < 2 ? 0 : (rng.nextInt(10) < 5 ? 1 : 2);
+                } else {
+                    // Balanced
+                    int r = rng.nextInt(10);
+                    type = (r < 4) ? 0 : (r < 7 ? 1 : 2);
+                }
                 
-                if (type < 4) { // Visit (40%)
+                if (type == 0) { // Visit
                     String url = "url" + rng.nextInt(10000) + ".com";
                     
                     // ref visit

@@ -683,6 +683,7 @@ async function handleRun(exercise: Exercise, isSubmit = false): Promise<void> {
   try {
     // Mock run (will be replaced with real compiler/runner later)
     const result = await javaRun(exercise, code, isSubmit, exercise.limits.timeLimitMs || 1000);
+    (window as any).__lastRunResult = result;
 
     // Update progress
     const currentProgress = await progressStore.getProgress(exercise.id);
@@ -767,7 +768,8 @@ function renderResults(result: RunResult): void {
   }
 
   // Summary
-  const passed = result.tests.filter(t => t.status === 'passed').length;
+  const passed   = result.tests.filter(t => t.status === 'passed').length;
+  const warnings  = result.tests.filter(t => t.status === 'warning').length;
   const total = result.tests.length;
   const statusText =
     result.status === 'accepted'            ? 'Accepted' :
@@ -784,7 +786,10 @@ function renderResults(result: RunResult): void {
 
   const summary = el('div', { className: 'result-summary', children: [
     el('span', { className: `result-summary__status ${statusClass}`, text: statusText }),
-    el('span', { className: 'result-summary__stats', text: `${passed}/${total} tests passed · ${result.elapsedMs}ms` }),
+    el('span', { className: 'result-summary__stats', text:
+      `${passed}/${total} tests passed · ${result.elapsedMs}ms` +
+      (warnings > 0 ? ` · ⚠ ${warnings} trivial` : ''),
+    }),
   ]});
   panelResult.appendChild(summary);
 
@@ -822,10 +827,11 @@ interface Verdict { label: string; cssClass: string; }
 
 function getTestVerdict(test: TestResult): Verdict {
   switch (test.status) {
-    case 'passed': return { label: '✓ AC',  cssClass: 'test-case__status--passed' };
-    case 'failed': return { label: '✗ WA',  cssClass: 'test-case__status--wa' };
-    case 'error':  return { label: '✗ RE',  cssClass: 'test-case__status--re' };
-    default:       return { label: '?',     cssClass: 'test-case__status--failed' };
+    case 'passed':  return { label: '✓ AC',  cssClass: 'test-case__status--passed'  };
+    case 'failed':  return { label: '✗ WA',  cssClass: 'test-case__status--wa'      };
+    case 'error':   return { label: '✗ RE',  cssClass: 'test-case__status--re'      };
+    case 'warning': return { label: '⚠ TRV', cssClass: 'test-case__status--warning' };
+    default:        return { label: '?',     cssClass: 'test-case__status--failed'  };
   }
 }
 
@@ -840,8 +846,11 @@ function createTestCaseElement(test: TestResult): HTMLElement {
   const testCase = el('div', { className: 'test-case' });
   testCase.appendChild(header);
 
-  // Show details for visible tests
-  if (test.visibility === 'visible' && (test.inputPreview || test.expectedPreview || test.actualPreview || test.message)) {
+  // Show details: always show warning message; show full details for visible tests
+  const showDetails = test.status === 'warning'
+    || (test.visibility === 'visible' && (test.inputPreview || test.expectedPreview || test.actualPreview || test.message));
+
+  if (showDetails) {
     const body = el('div', { className: 'test-case__body' });
 
     if (test.inputPreview) {
@@ -854,7 +863,10 @@ function createTestCaseElement(test: TestResult): HTMLElement {
       body.appendChild(createTestRow('Actual', test.actualPreview));
     }
     if (test.message) {
-      body.appendChild(createTestRow('Message', test.message));
+      body.appendChild(createTestRow(
+        test.status === 'warning' ? '⚠ Warning' : 'Message',
+        test.message,
+      ));
     }
 
     testCase.appendChild(body);

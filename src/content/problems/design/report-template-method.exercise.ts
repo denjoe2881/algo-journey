@@ -127,8 +127,8 @@ class ReportSystem {
             ReportSystem obj = new ReportSystem();
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(3);

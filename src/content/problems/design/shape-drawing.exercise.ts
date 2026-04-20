@@ -132,8 +132,8 @@ class DrawingBoard {
             java.util.List<String> names = new java.util.ArrayList<>();
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(3);

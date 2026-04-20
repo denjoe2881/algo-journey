@@ -9,15 +9,15 @@ export default defineTests('index-of-max', (t, rng) => {
   t.visible('max-repeats', { args: [[1, 7, 7, 3, 7]], expected: 1 });
 
   // ── Hidden Tests ──
-  t.hidden('large-tied-maxima', { args: [[1, 9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3]], expected: 1 });
-  t.hidden('tied-maxima-middle', { args: [[4, 12, 7, 12, 2, 12, 4, 12, 7, 12, 2, 12]], expected: 1 });
-  t.hidden('repeated-negative-max', { args: [[-4, -1, -1, -5, -1, -1, -4, -1, -5, -1]], expected: 1 });
+  t.hidden('large-tied-maxima', { args: [[9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3, 9, 1, 9, 2, 9, 3, 9]], expected: 0 });
+  t.hidden('tied-maxima-middle', { args: [[4, 2, 12, 7, 12, 4, 12, 7, 12, 2, 12]], expected: 2 });
+  t.hidden('repeated-negative-max', { args: [[-4, -5, -1, -1, -5, -1, -1, -4, -1, -5, -1]], expected: 2 });
   t.hidden('max-near-tail-large', { args: [[0, 1, 2, 3, 20, 0, 1, 2, 3, 20, 0, 1, 2, 3, 20]], expected: 4 });
   t.hidden('max-starts-at-index-1', { args: [[6, 13, 13, 8, 7, 6, 13, 13, 8, 7, 6]], expected: 1 });
-  t.hidden('first-repeated', { args: [[5, 11, 11, 10, 9, 5, 11, 11, 10, 9]], expected: 1 });
-  t.hidden('large-maxima-gaps', { args: [[3, 14, 1, 14, 2, 14, 0, 3, 14, 1, 14, 2, 14, 0]], expected: 1 });
+  t.hidden('first-repeated', { args: [[5, 10, 11, 11, 9, 5, 11, 11, 10, 9]], expected: 2 });
+  t.hidden('large-maxima-gaps', { args: [[3, 1, 14, 1, 14, 2, 14, 0, 3, 14, 1, 14, 2, 14, 0]], expected: 2 });
   t.hidden('descending-segments', { args: [[7, 8, 7, 6, 5, 4, 3, 2, 1, 8, 7, 6, 5]], expected: 1 });
-  t.hidden('first-top-not-last', { args: [[8, 10, 0, 9, 0, 8, 0, 10, 10, 0, 9, 0, 8]], expected: 1 });
+  t.hidden('first-top-not-last', { args: [[8, 9, 10, 0, 9, 0, 8, 0, 10, 10, 0, 9, 0, 8]], expected: 2 });
 
   // ── Generated Tests ──
   for (let i = 0; i < 9; i++) {

@@ -168,7 +168,7 @@ export interface CompileDiagnostic {
 export interface TestResult {
   name: string;
   visibility: 'visible' | 'hidden';
-  status: 'passed' | 'failed' | 'error';
+  status: 'passed' | 'failed' | 'error' | 'warning';
   inputPreview?: string;
   expectedPreview?: string;
   actualPreview?: string;

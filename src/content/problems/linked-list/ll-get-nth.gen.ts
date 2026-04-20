@@ -21,20 +21,19 @@ export default defineTests('ll-get-nth', (t, rng) => {
   t.hidden('large-index-oob', { args: [[1, 2], 99999], expected: -1 });
   t.hidden('exact-boundary', { args: [[3, 6, 9], 2], expected: 9 });
 
-  // ── Generated hidden tests — mix valid and OOB ──
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 50; i++) {
     const len = rng.int(10, 500);
     const arr = rng.intArray(len, -1000, 1000);
 
-    if (i % 4 === 0) {
+    if (i === 1) {
       // OOB: index exactly at len
       t.hidden(`gen-oob-${i}`, { args: [arr, len], expected: -1 });
-    } else if (i % 4 === 1) {
+    } else if (i === 2) {
       // OOB: large index
       t.hidden(`gen-oob-${i}`, { args: [arr, len + rng.int(1, 1000)], expected: -1 });
     } else {
       // Valid index — ensure values include -1 to avoid weak detection
-      if (i % 4 === 2) arr[rng.int(0, len - 1)] = -1;
+      if (i % 2 === 0) arr[rng.int(0, len - 1)] = -1;
       const n = rng.int(0, len - 1);
       t.hidden(`gen-valid-${i}`, { args: [arr, n], expected: arr[n]! });
     }

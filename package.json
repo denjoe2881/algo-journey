@@ -8,7 +8,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint:exercises": "npx tsx scripts/lint_exercises.ts"
+    "lint:exercises": "npx tsx scripts/lint_exercises.ts",
+    "pc-judge": "npx tsx scripts/generate-pc-judge.ts",
+    "pc-judge:all": "npx tsx scripts/generate-pc-judge.ts --all",
+    "pc-judge:verify": "npx tsx scripts/verify-pc-judge.ts"
   },
   "devDependencies": {
     "@types/marked": "^5.0.2",

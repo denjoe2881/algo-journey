@@ -1,10 +1,10 @@
 /* ═══════════════════════════════════════════════════════════
    Output Parser
-   Parses structured AJ| lines from RunnerMain.java stdout.
+   Parses structured TEST| / ERROR| lines from Runner.java stdout.
    Protocol:
-     AJ|<name>|<pass>|<actual>|<expected>
-     AJ_ERROR|<message>
-     __AJ_DONE__
+     TEST|<name>|<pass>|<actual>|<expected>
+     ERROR|<name>|<exception>
+     === DONE ===
    ═══════════════════════════════════════════════════════════ */
 
 import type { TestCase, TestResult } from '../shared/types';
@@ -15,8 +15,11 @@ export interface ParsedResult {
   done: boolean;
 }
 
+
+
 /**
- * Parse stdout lines from RunnerMain into structured TestResults.
+ * Parse stdout lines from Runner.java into structured TestResults.
+ * Supports both legacy AJ| format and new TEST|/ERROR| format.
  */
 export function parseRunnerOutput(
   stdout: string,
@@ -29,40 +32,66 @@ export function parseRunnerOutput(
   let done = false;
 
   for (const line of lines) {
-    if (line === '__AJ_DONE__') {
+    // New format sentinel
+    if (line === '=== DONE ===' || line === '__AJ_DONE__') {
       done = true;
       continue;
     }
 
+    // ── New format: ERROR|<name>|<exception> ─────────────────────
+    if (line.startsWith('ERROR|')) {
+      const parts = line.split('|');
+      if (parts.length >= 3) {
+        const name   = parts[1];
+        const errMsg = parts.slice(2).join('|');
+        resultMap.set(name, { name, status: 'error' as const, message: errMsg });
+      }
+      continue;
+    }
+
+    // ── New format: TEST|<name>|<pass>|<actual>|<expected> ───────
+    if (line.startsWith('TEST|')) {
+      const parts = line.split('|');
+      if (parts.length < 5) continue;
+      const [, name, passStr, actual, ...rest] = parts;
+      const expected = rest.join('|');
+      if (!name) continue;
+
+      const passed = passStr === 'true';
+      resultMap.set(name, {
+        name,
+        status: passed ? 'passed' : 'failed',
+        actualPreview:   actual?.slice(0, 300),
+        expectedPreview: expected?.slice(0, 300),
+      });
+      continue;
+    }
+
+    // ── Legacy format: AJ_ERROR|testname: exception ───────────────
     if (line.startsWith('AJ_ERROR|')) {
       const body = line.slice('AJ_ERROR|'.length);
-      // Per-test RE: format is "AJ_ERROR|testname: exception message"
-      // Global RE:   format is "AJ_ERROR|some crash message" (no pipe-separated name)
       const colonIdx = body.indexOf(': ');
       if (colonIdx > 0) {
         const testName = body.slice(0, colonIdx);
         const errMsg   = body.slice(colonIdx + 2);
-        resultMap.set(testName, {
-          name: testName,
-          status: 'error' as const,
-          message: errMsg,
-        });
+        resultMap.set(testName, { name: testName, status: 'error' as const, message: errMsg });
       } else {
         runtimeError = body;
       }
       continue;
     }
 
+    // ── Legacy format: AJ|<name>|<pass>|<actual>|<expected> ──────
     if (line.startsWith('AJ|')) {
-      // AJ|<name>|<pass>|<actual>|<expected>
       const parts = line.split('|');
       if (parts.length < 5) continue;
       const [, name, passStr, actual, expected] = parts;
       if (!name) continue;
 
+      const passed = passStr === 'true';
       resultMap.set(name, {
         name,
-        status: passStr === 'true' ? 'passed' : 'failed',
+        status: passed ? 'passed' : 'failed',
         actualPreview:   actual?.slice(0, 300),
         expectedPreview: expected?.slice(0, 300),
       });
@@ -74,7 +103,6 @@ export function parseRunnerOutput(
   const tests: Omit<TestResult, 'visibility'>[] = allTests.map(tc => {
     const parsed = resultMap.get(tc.name);
     if (parsed) return parsed;
-    // Test didn't produce output (e.g. crashed before reaching it)
     return {
       name: tc.name,
       status: 'error' as const,
@@ -82,7 +110,7 @@ export function parseRunnerOutput(
     };
   });
 
-  // Append any dynamically generated tests (like stress-0 from javaGenerator)
+  // Append dynamically generated tests (stress tests from javaGenerator)
   for (const [name, parsed] of resultMap.entries()) {
     if (!allTests.some(tc => tc.name === name)) {
       tests.push(parsed);

@@ -86,8 +86,8 @@ nc.find(10); // Number 10 is at the indices 2, 3, and 5. The smallest index that
             java.util.Map<Integer, java.util.TreeSet<Integer>> numberToIndices = new java.util.HashMap<>();
             
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(3);

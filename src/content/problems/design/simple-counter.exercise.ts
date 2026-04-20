@@ -56,5 +56,41 @@ export default defineExercise({
     ],
   },
 
-  evaluation: { comparator: 'exact_json' }
+  evaluation: { 
+    comparator: 'exact_json',
+    javaGenerator: {
+      count: 20,
+      seed: 999111,
+      namePrefix: 'stress-',
+      visibility: 'hidden',
+      genMethodBody: `
+        for (int i = 0; i < 20; i++) {
+            int opsCount = (i < 5) ? 50 : 2000;
+            int startVal = Math.abs(rng.nextInt(10000));
+            Counter obj = new Counter(startVal);
+            
+            int refVal = startVal;
+            boolean pass = true;
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
+
+            for (int k = 0; k < opsCount; k++) {
+                int opType = rng.nextInt(2);
+                if (opType == 0) { // increment
+                    obj.increment();
+                    refVal++;
+                } else { // getValue
+                    int actual = obj.getValue();
+                    if (actual != refVal) {
+                        pass = false;
+                        firstMismatchAct = "[getValue -> " + actual + "]";
+                        firstMismatchExp = "[getValue -> " + refVal + "]";
+                        break;
+                    }
+                }
+            }
+            System.out.println("AJ|stress-" + i + "|" + pass + "|" + firstMismatchAct + "|" + firstMismatchExp);
+        }`
+    }
+  }
 });

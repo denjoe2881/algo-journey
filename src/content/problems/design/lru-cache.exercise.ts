@@ -87,60 +87,74 @@ lRUCache.get(4);    // return 4`,
       namePrefix: 'test-',
       visibility: 'hidden',
       genMethodBody: `
-        // Create an internal class for tracking LRU state independently to test learner's LRU
+        // Reference implementation using LinkedHashMap with access-order
         class LRUTracker {
             int capacity;
             java.util.LinkedHashMap<Integer, Integer> map;
             public LRUTracker(int limit) {
                 this.capacity = limit;
+                // access-order=true: get() moves entry to tail (most-recent)
                 this.map = new java.util.LinkedHashMap<Integer, Integer>(limit, 0.75f, true);
             }
-            public int get(int key) { return map.getOrDefault(key, -1); }
-            public void put(int key, int value) { 
-                map.put(key, value); 
+            public int get(int key) {
+                // Use get() (not getOrDefault) so access-order is updated
+                Integer v = map.get(key); return v == null ? -1 : v;
+            }
+            public void put(int key, int value) {
+                map.put(key, value);
+                // Evict LRU entry (head of access-ordered map) when over capacity
                 if (map.size() > capacity) {
                     java.util.Iterator<Integer> it = map.keySet().iterator();
-                    if (it.hasNext()) {
-                        it.next();
-                        it.remove();
-                    }
+                    if (it.hasNext()) { it.next(); it.remove(); }
                 }
             }
         }
 
         for (int i = 0; i < 20; i++) {
-            int opsCount = (i < 5) ? 200 : 10000;
-            int capacity = rng.nextInt(300) + 1;
-            
-            LRUCache obj = new LRUCache(capacity);
+            // Mix sizes: small (forces many evictions) and larger
+            int opsCount = (i < 10) ? 500 : 2000;
+            // Small capacity forces aggressive eviction; larger capacity tests bulk behavior
+            int capacity = (i < 5) ? (rng.nextInt(5) + 2)    // 2–6 → very tight
+                         : (i < 10) ? (rng.nextInt(20) + 5)  // 5–24 → moderate
+                         :            (rng.nextInt(100) + 20);// 20–119 → larger
+
+            LRUCache  obj     = new LRUCache(capacity);
             LRUTracker tracker = new LRUTracker(capacity);
-            
-            boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+
+            // key universe slightly larger than capacity to ensure evictions happen
+            int keyRange = capacity + rng.nextInt(capacity + 1) + 1;
+
+            String mismatchAct = null;
+            String mismatchExp = null;
+            int getOps = 0;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(3); // 0,1=put, 2=get
-                int key = rng.nextInt(capacity * 2); // Make keys bound close to capacity to force evictions
-                
-                if (type < 2) { // put
-                    int val = rng.nextInt(10000);
+                int key  = rng.nextInt(keyRange);
+
+                if (type < 2) {
+                    int val = rng.nextInt(100000);
                     tracker.put(key, val);
                     obj.put(key, val);
-                } else { // get
-                    int expectedAns = tracker.get(key);
-                    int actualAns = obj.get(key);
-                    
-                    if (expectedAns != actualAns) {
-                        pass = false;
-                        firstMismatchAct = "[get " + key + " -> " + actualAns + "]";
-                        firstMismatchExp = "[get " + key + " -> " + expectedAns + "]";
+                } else {
+                    int exp = tracker.get(key);
+                    int act = obj.get(key);
+                    getOps++;
+                    if (exp != act) {
+                        mismatchAct = "get(" + key + ")=" + act;
+                        mismatchExp = "get(" + key + ")=" + exp;
                         break;
                     }
                 }
             }
-            System.out.println("AJ|test-" + i + "|" + pass + "|" + firstMismatchAct + "|" + firstMismatchExp);
+
+            boolean pass = (mismatchAct == null);
+            // On pass: report summary so result is never trivially empty
+            String actStr = pass ? ("ok:" + getOps + "gets,cap=" + capacity) : mismatchAct;
+            String expStr = pass ? ("ok:" + getOps + "gets,cap=" + capacity) : mismatchExp;
+            System.out.println("AJ|test-" + i + "|" + pass + "|" + actStr + "|" + expStr);
         }`
+
     }
   }
 });

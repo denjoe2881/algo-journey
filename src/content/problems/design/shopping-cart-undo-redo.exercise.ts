@@ -113,8 +113,8 @@ cart.getCartTotalQuantity();  // return 2 (removes banana again)`,
             java.util.HashMap<String, Integer> currentCart = new java.util.HashMap<>();
             
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int type = rng.nextInt(5);

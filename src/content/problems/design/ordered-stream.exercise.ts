@@ -93,8 +93,8 @@ class OrderedStream {
             int ptr = 1;
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < n; k++) {
                 int idKey = ids.get(k);

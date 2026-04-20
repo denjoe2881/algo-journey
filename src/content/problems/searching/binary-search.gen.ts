@@ -12,12 +12,10 @@ export default defineTests('binary-search', (t, rng) => {
   t.hidden('stress-found', { args: [arr, arr[idx]!], expected: idx });
   t.hidden('stress-not', { args: [arr, -999], expected: -1 });
 
-  // Rule #6: only 1-2 not-found tests in generated
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < 21; i++) {
     const len = rng.int(5, 1000);
     const testArr = rng.sortedUniqueIntArray(len, -20000, 20000);
-    if (i === 1) {
-      // The single not-found generated test
+    if (i === 0) { // Keep just ONE additional strictly generated unfound to prevent over representation
       const target = testArr[0]! - rng.int(1, 100);
       t.hidden(`gen-not-${i}`, { args: [testArr, target], expected: -1 });
     } else {

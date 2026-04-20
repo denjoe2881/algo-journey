@@ -7,10 +7,17 @@ export default defineTests('gcd', (t, rng) => {
   t.hidden('one-is-1', { args: [1, 100], expected: 1 });
   t.hidden('coprime', { args: [17, 31], expected: 1 });
   t.hidden('large', { args: [1000000000, 500000000], expected: 500000000 });
-  // Trim from 15 to 14 generated (total = 2+4+14 = 20)
-  for (let i = 0; i < 14; i++) {
-    const a = rng.int(1, 1000000);
-    const b = rng.int(1, 1000000);
+  // Trim to 24 generated (total 30)
+  for (let i = 0; i < 24; i++) {
+    let a, b;
+    if (i < 20) {
+      const common = rng.int(2, 500);
+      a = common * rng.int(1, 2000);
+      b = common * rng.int(1, 2000);
+    } else {
+      a = rng.int(1, 1000000);
+      b = rng.int(1, 1000000);
+    }
     t.hidden(`gen-${i}`, { args: [a, b], expected: gcd(a, b) });
   }
 });

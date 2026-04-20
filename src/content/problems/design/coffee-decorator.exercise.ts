@@ -121,11 +121,15 @@ class CoffeeShop {
             CoffeeShop obj = new CoffeeShop();
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
-                int numToppings = rng.nextInt(5);
+                int numToppings;
+                if (i < 3) numToppings = 0; // Empty topping test
+                else if (i < 6) numToppings = 10; // Large toppings test
+                else numToppings = rng.nextInt(5);
+                
                 String[] toppings = new String[numToppings];
                 
                 String expectedDesc = "Basic Coffee";

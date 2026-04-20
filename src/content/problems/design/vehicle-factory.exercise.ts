@@ -109,8 +109,8 @@ class VehicleFactory {
             VehicleFactory obj = new VehicleFactory();
 
             boolean pass = true;
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 String reqType = types[rng.nextInt(types.length)];
@@ -136,12 +136,7 @@ class VehicleFactory {
                     }
                 }
             }
-            // For successful passes, output matches exactly so the comparator doesn't complain
-            if (pass) {
-                System.out.println("AJ|test-" + i + "|true|[]|[]");
-            } else {
-                System.out.println("AJ|test-" + i + "|false|" + firstMismatchAct + "|" + firstMismatchExp);
-            }
+            System.out.println("AJ|test-" + i + "|" + pass + "|" + firstMismatchAct + "|" + firstMismatchExp);
         }`
     }
   }

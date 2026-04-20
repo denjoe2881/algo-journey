@@ -18,8 +18,9 @@ export default defineTests('count-unique', (t, rng) => {
   // ── Generated Tests ──
   for (let i = 0; i < 10; i++) {
     const isLarge = i >= 8;
-    const len = isLarge ? rng.int(1000, 2000) : rng.int(5, 500);
-    const testArr = rng.intArray(len, -20, 20); // Narrow range helps trigger many duplicates
+    const len = isLarge ? rng.int(1000, 2000) : rng.int(20, 500);
+    const rangeLimit = rng.int(5, 50); // randomize domain size!
+    const testArr = rng.intArray(len, -rangeLimit, rangeLimit); 
     
     const uniqueCount = new Set(testArr).size;
     t.hidden(`gen-${i}`, { args: [testArr], expected: uniqueCount });

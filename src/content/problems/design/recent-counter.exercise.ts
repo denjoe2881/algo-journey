@@ -74,8 +74,8 @@ It is guaranteed that every call to \`ping\` uses a strictly larger value of \`t
             java.util.Queue<Integer> refQueue = new java.util.LinkedList<>();
             boolean pass = true;
             
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
             
             int currentT = 0;
 

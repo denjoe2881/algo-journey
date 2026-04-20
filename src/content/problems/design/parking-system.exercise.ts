@@ -78,8 +78,8 @@ Implement the \`ParkingSystem\` class:\n\n- \`ParkingSystem(int big, int medium,
             ParkingSystem obj = new ParkingSystem(refSpaces[1], refSpaces[2], refSpaces[3]);
             boolean pass = true;
             
-            String firstMismatchAct = "[]";
-            String firstMismatchExp = "[]";
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int carType = rng.nextInt(3) + 1; // 1, 2, or 3

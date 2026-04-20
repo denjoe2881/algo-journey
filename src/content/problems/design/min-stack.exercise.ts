@@ -77,21 +77,21 @@ You must implement a solution with \`O(1)\` time complexity for each function.`,
   evaluation: { 
     comparator: 'exact_json',
     javaGenerator: {
-      count: 2,
+      count: 20,
       seed: 848484,
       namePrefix: 'stress-',
       visibility: 'hidden',
       genMethodBody: `
-        for (int i = 0; i < 2; i++) {
-            int opsCount = 20000;
-            java.util.ArrayList<String> actual = new java.util.ArrayList<>();
-            java.util.ArrayList<String> expected = new java.util.ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            int opsCount = (i < 5) ? 100 : 20000;
             MinStack obj = new MinStack();
-            actual.add("null");
-            expected.add("null");
             
             java.util.Stack<Integer> valStack = new java.util.Stack<>();
             java.util.Stack<Integer> minStack = new java.util.Stack<>();
+
+            boolean pass = true;
+            String firstMismatchAct = "\\"[OK-Test-" + i + "] Ops: \\" + opsCount";
+            String firstMismatchExp = firstMismatchAct;
 
             for (int k = 0; k < opsCount; k++) {
                 int opType = valStack.isEmpty() ? 0 : rng.nextInt(4);
@@ -102,24 +102,31 @@ You must implement a solution with \`O(1)\` time complexity for each function.`,
                     if (minStack.isEmpty() || val <= minStack.peek()) {
                         minStack.push(val);
                     }
-                    actual.add("null");
-                    expected.add("null");
                 } else if (opType == 1) { // pop
                     obj.pop();
                     int popped = valStack.pop();
                     if (popped == minStack.peek()) minStack.pop();
-                    actual.add("null");
-                    expected.add("null");
                 } else if (opType == 2) { // top
-                    actual.add(String.valueOf(obj.top()));
-                    expected.add(String.valueOf(valStack.peek()));
+                    int actualTop = obj.top();
+                    int expectedTop = valStack.peek();
+                    if (actualTop != expectedTop) {
+                        pass = false;
+                        firstMismatchAct = "[top -> " + actualTop + "]";
+                        firstMismatchExp = "[top -> " + expectedTop + "]";
+                        break;
+                    }
                 } else { // getMin
-                    actual.add(String.valueOf(obj.getMin()));
-                    expected.add(String.valueOf(minStack.peek()));
+                    int actualMin = obj.getMin();
+                    int expectedMin = minStack.peek();
+                    if (actualMin != expectedMin) {
+                        pass = false;
+                        firstMismatchAct = "[getMin -> " + actualMin + "]";
+                        firstMismatchExp = "[getMin -> " + expectedMin + "]";
+                        break;
+                    }
                 }
             }
-            boolean pass = actual.equals(expected);
-            System.out.println("AJ|stress-" + i + "|" + pass + "|" + actual.toString() + "|" + expected.toString());
+            System.out.println("AJ|stress-" + i + "|" + pass + "|" + firstMismatchAct + "|" + firstMismatchExp);
         }`
     }
   }

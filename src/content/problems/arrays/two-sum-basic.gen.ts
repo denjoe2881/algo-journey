@@ -18,24 +18,24 @@ export default defineTests('two-sum-basic', (t, rng) => {
   t.hidden('adjacent-pair', { args: [[10, 20, 30, 40, 50], 50], expected: [1, 2] });
 
   // ── Generated hidden tests (10) ──
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
     const len = rng.int(10, 500);
-    // Generate unique values to ensure exactly one valid answer
     const arr: number[] = [];
     const usedValues = new Set<number>();
+    // Inject target value distance based on i
     for (let j = 0; j < len; j++) {
       let v: number;
       do { v = rng.int(-50000, 50000); } while (usedValues.has(v));
       usedValues.add(v);
       arr.push(v);
     }
+    
+    let idxA = i; // push them specifically based on test index
+    let idxB = len - 1 - i;
+    if (idxA >= idxB) idxA = 0;
 
-    // Pick two random indices as the answer pair
-    const idxA = rng.int(0, len - 2);
-    let idxB = rng.int(idxA + 1, len - 1);
     const target = arr[idxA]! + arr[idxB]!;
 
-    // Find the first valid pair (same logic as the hashmap approach)
     const map = new Map<number, number>();
     let expA = -1, expB = -1;
     for (let j = 0; j < len; j++) {
