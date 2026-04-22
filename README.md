@@ -1,6 +1,6 @@
 # Algo Journey
 
-> A hands-on programming practice platform for university courses — built to help students learn programming through fast feedback, reflection, and deliberate practice, and to help educators author high-quality exercises with AI-assisted but rigorously verified workflows.
+> A hands-on programming practice platform for university courses — built to help students learn through fast feedback, reflection, and deliberate practice, and to help educators author high-quality exercises through AI-assisted but rigorously verified workflows.
 
 ---
 
@@ -10,11 +10,11 @@
 
 Students write, run, and get results immediately. No setup. No login. No waiting.
 
-The deeper goal is not just convenience. It is to support a more scientific way of learning programming: make an attempt, observe concrete feedback, inspect failure, refine the mental model, and try again. On the educator side, the same philosophy leads to a different requirement: exercises must be auditable, measurable, and strong enough that student progress is driven by real understanding rather than weak or misleading tests.
+The deeper goal is not just convenience. Algo Journey is built around a more scientific learning loop: make an attempt, observe concrete feedback, inspect failure, refine the mental model, and try again. The same philosophy raises the bar for educators: exercises must be auditable, measurable, and strong enough that progress reflects real understanding rather than weak or misleading tests.
 
 The project is now evolving in two parallel directions:
-- **Student-side AI assistance** — prompt-based support through **Ask AI** on each problem and **AI Progress** on the catalog page, designed to strengthen reasoning, reflection, and self-correction
-- **Educator-side AI-assisted exercise authoring** — a structured content pipeline for drafting, verifying, and expanding exercises with AI support under instructor control
+- **Student-side AI support** — prompt-based tools such as **Ask AI** and **AI Progress**, designed to strengthen reasoning, reflection, and self-correction
+- **Educator-side AI-assisted authoring** — a structured pipeline for drafting, verifying, and expanding exercises with AI support under instructor judgment
 
 ---
 
@@ -25,7 +25,7 @@ npm install
 npm run dev
 ```
 
-This starts the local app and authoring environment. Build the production bundle with:
+This starts the local app and authoring environment. To build the production bundle:
 
 ```bash
 npm run build
@@ -35,11 +35,11 @@ npm run build
 
 ## For Students
 
-The student experience is designed around deliberate practice. The goal is not to remove challenge; it is to make challenge more visible, more interpretable, and more productive.
+The student experience is designed around deliberate practice. The goal is not to remove challenge, but to make it visible, interpretable, and productive.
 
 - **Write code, see results instantly** — browser-based Java execution with compile errors, runtime errors, and test output shown in real time
-- **Learn through guided thinking, not answer dumping** — use **Ask AI** to generate structured prompts for hints, debugging, explanation, or review, so support arrives in stages and still pushes students to reason, inspect their own code, test ideas, and discover the next step themselves
-- **Build metacognition, not just momentum** — use **AI Progress** to turn browser-stored solving history into a reflective prompt that helps students identify patterns, monitor strengths and weaknesses, and choose what to practice next with more intention
+- **Learn through guided thinking, not answer dumping** — use **Ask AI** to generate structured prompts for hints, debugging, explanation, or review, so support arrives in stages and still pushes students to reason, inspect their own code, test ideas, and find the next step themselves
+- **Build metacognition, not just momentum** — use **AI Progress** to turn browser-stored solving history into a reflective prompt that helps students see patterns in their work, monitor strengths and weaknesses, and choose what to practice next with more intention
 - **Practice by topic and difficulty** — algorithms, data structures, OOP, Design Patterns, and more
 - **Learn at your own pace** — progress, drafts, and submission history are stored locally in the browser, so students can revisit attempts, compare outcomes, and pick up where they left off without an account system
 - **Familiar experience** — a clean, distraction-free interface similar to LeetCode or HackerRank
@@ -57,20 +57,20 @@ The student experience is designed around deliberate practice. The goal is not t
 
 ## For Educators
 
-Algo Journey is more than a student-facing tool. It includes a full **instructor-side framework** for creating, verifying, and quality-controlling exercises — built for educators who want assignments that genuinely reward understanding, expose misconceptions, and produce trustworthy feedback.
+Algo Journey is more than a student-facing tool. It includes a full **instructor-side framework** for creating, verifying, and quality-controlling exercises — built for educators who want assignments that reward understanding, expose misconceptions, and produce trustworthy feedback.
 
 ### AI-Assisted Exercise Authoring
 
-This is a core direction of the project, not a side feature. The role of AI here is deliberately constrained: it accelerates drafting and iteration, while correctness, auditability, and final approval remain with the instructor and are enforced through a deterministic verification pipeline.
+This is a core direction of the project, not a side feature. The role of AI here is deliberately constrained: it accelerates drafting and iteration, while correctness, auditability, and final approval stay with the instructor and are backed by a deterministic verification pipeline.
 
-That constraint is part of the pedagogy. If the platform is meant to train students through meaningful feedback, then the exercises themselves must be well-designed, the reference solutions must be trustworthy, and the tests must be strong enough to distinguish shallow pattern-matching from genuine understanding.
+That constraint is part of the pedagogy. If the platform is meant to train students through meaningful feedback, the exercises themselves must be well-designed, the reference solutions must be trustworthy, and the tests must be strong enough to separate shallow pattern-matching from genuine understanding.
 
 Each exercise is defined in a structured TypeScript schema (`.exercise.ts` + `.gen.ts` + `.solution.java`) that separates:
 - **Problem statement and constraints**
 - **Test case generation** (both static and randomized stress tests)
 - **Reference solution** for ground-truth validation
 
-This schema is designed to be drafted with AI assistance, then verified and committed by the instructor. The separation of concerns makes it easy to audit, update, and expand the exercise library systematically, while keeping the final artifact understandable to humans rather than opaque to them.
+This schema is designed to be drafted with AI assistance, then verified and committed by the instructor. That separation of concerns makes the exercise library easier to audit, update, and expand systematically, while keeping the final artifact understandable to humans rather than opaque to them.
 
 In practice, that gives educators a repeatable workflow:
 - Draft or refine the problem statement with AI
@@ -124,9 +124,9 @@ Each package includes a test harness (`Runner.java`), a reference solution, and 
 
 ### Quality Control Pipeline
 
-A set of CLI tools keeps the exercise library honest. The commands above are the operational entry points; the value of this pipeline is that it turns exercise quality into something measurable instead of subjective.
+A set of CLI tools keeps the exercise library honest. The commands above are the operational entry points. The value of this pipeline is that it turns exercise quality into something measurable rather than subjective.
 
-That matters because weak exercises do not just lower assessment quality; they also distort student learning. If tests are shallow, repetitive, or incomplete, students are rewarded for brittle tactics instead of robust reasoning. The pipeline exists to prevent that.
+That matters because weak exercises do not just lower assessment quality; they also distort student learning. If tests are shallow, repetitive, or incomplete, students are rewarded for brittle tactics instead of robust reasoning. This pipeline exists to prevent that.
 
 ```bash
 # 1. Generate standalone Java packages for PC Judge
@@ -199,8 +199,8 @@ Key reports written to `out/pc-judge/`:
 
 ## Contributing
 
-If you care about programming education, open-source tooling, or AI-assisted curriculum design, this project is built to be easy to understand and extend.
+If you care about programming education, open-source tooling, or AI-assisted curriculum design, this project is built to be understandable, inspectable, and extensible.
 
 Contributions are especially valuable when they strengthen one of the project's two core bets: helping students learn through evidence, reflection, and iteration, or helping educators publish exercises whose quality can be inspected and defended.
 
-Contributions welcome — new exercises, new Design Pattern problems, UI improvements, or enhancements to the instructor toolchain.
+Contributions welcome — new exercises, new Design Pattern problems, UI improvements, or improvements to the authoring and verification toolchain.
